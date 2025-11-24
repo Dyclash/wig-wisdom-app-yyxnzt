@@ -218,7 +218,7 @@ export default function QuizScreen() {
           <View style={styles.optionsContainer}>
             {shuffledQuestion.options.map((option, index) => (
               <Pressable
-                key={index}
+                key={`${currentQuestion.id}-option-${index}-${option.substring(0, 10)}`}
                 style={({ pressed }) => [
                   getAnswerStyle(index),
                   glassStyles.glassButton,

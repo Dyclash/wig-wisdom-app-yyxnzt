@@ -266,9 +266,9 @@ export default function ProfileScreen() {
             Achievements
           </Text>
           <View style={styles.achievementsGrid}>
-            {userStats.achievements.map((achievement, index) => (
+            {userStats.achievements.map((achievement) => (
               <View 
-                key={index}
+                key={`achievement-${achievement.id}`}
                 style={[
                   styles.achievementItem,
                   { 
@@ -309,7 +309,7 @@ export default function ProfileScreen() {
             </Text>
             {userStats.recentScores.map((quiz, index) => (
               <View 
-                key={index}
+                key={`recent-quiz-${index}-${quiz.date}`}
                 style={[
                   styles.recentItem,
                   { borderBottomColor: theme.dark ? '#3a3a3a' : colors.highlight }
