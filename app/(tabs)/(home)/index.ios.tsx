@@ -3,9 +3,10 @@ import React from "react";
 import { View, Text, StyleSheet, ScrollView, Pressable } from "react-native";
 import { useTheme } from "@react-navigation/native";
 import { useRouter } from "expo-router";
-import { colors } from "@/styles/commonStyles";
-import { IconSymbol } from "@/components/IconSymbol.ios";
+import { colors, glassStyles, gradients, shadows, typography } from "@/styles/commonStyles";
+import { IconSymbol } from "@/components/IconSymbol";
 import { LinearGradient } from "expo-linear-gradient";
+import { LaceFrontalEmblem } from "@/components/LaceFrontalEmblem";
 
 export default function HomeScreen() {
   const theme = useTheme();
@@ -16,172 +17,190 @@ export default function HomeScreen() {
     router.push('/quiz');
   };
 
-  return (
-    <ScrollView 
-      style={[styles.container, { backgroundColor: theme.dark ? '#1a1a1a' : colors.background }]}
-      contentContainerStyle={styles.contentContainer}
-    >
-      <View style={styles.header}>
-        <LinearGradient
-          colors={theme.dark ? ['#4a148c', '#7b1fa2'] : [colors.primary, colors.secondary]}
-          style={styles.iconContainer}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-        >
-          <IconSymbol 
-            ios_icon_name="sparkles" 
-            android_material_icon_name="auto-awesome" 
-            size={48} 
-            color={colors.accent}
-          />
-        </LinearGradient>
-        
-        <Text style={[styles.title, { color: theme.dark ? '#ffffff' : colors.text }]}>
-          Wig Wisdom
-        </Text>
-        
-        <Text style={[styles.subtitle, { color: theme.dark ? '#cccccc' : colors.textSecondary }]}>
-          Test your wig knowledge!
-        </Text>
-      </View>
+  const bgColor = theme.dark ? colors.backgroundDark : colors.background;
+  const textColor = theme.dark ? colors.textLight : colors.text;
+  const secondaryTextColor = theme.dark ? '#D4B5D4' : colors.textSecondary;
 
-      <View style={styles.infoSection}>
-        <View style={[styles.infoCard, { backgroundColor: theme.dark ? '#2a2a2a' : colors.card }]}>
+  return (
+    <View style={[styles.container, { backgroundColor: bgColor }]}>
+      {/* Decorative Background Gradient */}
+      <LinearGradient
+        colors={theme.dark 
+          ? ['rgba(42, 26, 46, 0.9)', 'rgba(154, 78, 136, 0.2)', 'rgba(42, 26, 46, 0.9)']
+          : ['rgba(255, 243, 236, 1)', 'rgba(247, 198, 208, 0.3)', 'rgba(200, 162, 200, 0.2)']}
+        style={styles.backgroundGradient}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+      />
+      
+      <ScrollView 
+        style={styles.scrollView}
+        contentContainerStyle={styles.contentContainer}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* Header with Lace Frontal Emblem */}
+        <View style={styles.header}>
+          <LaceFrontalEmblem size={140} style={styles.emblem} />
+          
+          <Text style={[styles.title, { color: textColor }]}>
+            Wig Wisdom
+          </Text>
+          
+          <Text style={[styles.subtitle, { color: secondaryTextColor }]}>
+            ✨ Master the Art of Wig Beauty ✨
+          </Text>
+        </View>
+
+        {/* Glass Info Card */}
+        <View style={[styles.glassCard, glassStyles.glassPinkCard]}>
           <View style={styles.infoRow}>
-            <IconSymbol 
-              ios_icon_name="questionmark.circle.fill" 
-              android_material_icon_name="help" 
-              size={24} 
-              color={theme.dark ? colors.secondary : colors.primary}
-            />
-            <Text style={[styles.infoText, { color: theme.dark ? '#ffffff' : colors.text }]}>
-              48 comprehensive questions covering all aspects of wigs
+            <View style={styles.iconCircle}>
+              <IconSymbol 
+                ios_icon_name="questionmark.circle.fill" 
+                android_material_icon_name="help" 
+                size={28} 
+                color={colors.softPlum}
+              />
+            </View>
+            <Text style={[styles.infoText, { color: textColor }]}>
+              48 expert questions covering every aspect of wig care
             </Text>
           </View>
           
           <View style={styles.infoRow}>
-            <IconSymbol 
-              ios_icon_name="clock.fill" 
-              android_material_icon_name="schedule" 
-              size={24} 
-              color={theme.dark ? colors.secondary : colors.primary}
-            />
-            <Text style={[styles.infoText, { color: theme.dark ? '#ffffff' : colors.text }]}>
-              Take your time - no time limit!
+            <View style={styles.iconCircle}>
+              <IconSymbol 
+                ios_icon_name="clock.fill" 
+                android_material_icon_name="schedule" 
+                size={28} 
+                color={colors.roseGold}
+              />
+            </View>
+            <Text style={[styles.infoText, { color: textColor }]}>
+              Take your time - learn at your own pace
             </Text>
           </View>
           
           <View style={styles.infoRow}>
-            <IconSymbol 
-              ios_icon_name="star.fill" 
-              android_material_icon_name="star" 
-              size={24} 
-              color={theme.dark ? colors.accent : colors.accent}
-            />
-            <Text style={[styles.infoText, { color: theme.dark ? '#ffffff' : colors.text }]}>
-              Master wig quality, installation, care, and maintenance
+            <View style={styles.iconCircle}>
+              <IconSymbol 
+                ios_icon_name="star.fill" 
+                android_material_icon_name="star" 
+                size={28} 
+                color={colors.accent}
+              />
+            </View>
+            <Text style={[styles.infoText, { color: textColor }]}>
+              Become a certified Lace Master
             </Text>
           </View>
         </View>
 
-        <View style={[styles.topicsCard, { backgroundColor: theme.dark ? '#2a2a2a' : colors.card }]}>
-          <Text style={[styles.topicsTitle, { color: theme.dark ? '#ffffff' : colors.text }]}>
+        {/* Topics Card with Wave Pattern */}
+        <View style={[styles.topicsCard, glassStyles.glassLavenderCard]}>
+          <Text style={[styles.sectionTitle, { color: textColor }]}>
             Topics Covered
           </Text>
           <View style={styles.topicsList}>
-            <View style={styles.topicItem}>
-              <Text style={styles.topicEmoji}>💎</Text>
-              <Text style={[styles.topicText, { color: theme.dark ? '#cccccc' : colors.textSecondary }]}>
-                Wig Quality & Selection
-              </Text>
-            </View>
-            <View style={styles.topicItem}>
-              <Text style={styles.topicEmoji}>📏</Text>
-              <Text style={[styles.topicText, { color: theme.dark ? '#cccccc' : colors.textSecondary }]}>
-                Length & Density
-              </Text>
-            </View>
-            <View style={styles.topicItem}>
-              <Text style={styles.topicEmoji}>💡</Text>
-              <Text style={[styles.topicText, { color: theme.dark ? '#cccccc' : colors.textSecondary }]}>
-                Beginner Knowledge
-              </Text>
-            </View>
-            <View style={styles.topicItem}>
-              <Text style={styles.topicEmoji}>🛍️</Text>
-              <Text style={[styles.topicText, { color: theme.dark ? '#cccccc' : colors.textSecondary }]}>
-                Shopping & Buying
-              </Text>
-            </View>
-            <View style={styles.topicItem}>
-              <Text style={styles.topicEmoji}>🎯</Text>
-              <Text style={[styles.topicText, { color: theme.dark ? '#cccccc' : colors.textSecondary }]}>
-                Installation Methods
-              </Text>
-            </View>
-            <View style={styles.topicItem}>
-              <Text style={styles.topicEmoji}>💧</Text>
-              <Text style={[styles.topicText, { color: theme.dark ? '#cccccc' : colors.textSecondary }]}>
-                Wig Care
-              </Text>
-            </View>
-            <View style={styles.topicItem}>
-              <Text style={styles.topicEmoji}>🔥</Text>
-              <Text style={[styles.topicText, { color: theme.dark ? '#cccccc' : colors.textSecondary }]}>
-                Wig Maintenance
-              </Text>
-            </View>
+            {[
+              { emoji: '💎', text: 'Wig Quality & Selection' },
+              { emoji: '📏', text: 'Length & Density' },
+              { emoji: '💡', text: 'Beginner Knowledge' },
+              { emoji: '🛍️', text: 'Shopping & Buying' },
+              { emoji: '🎯', text: 'Installation Methods' },
+              { emoji: '💧', text: 'Wig Care' },
+              { emoji: '🔥', text: 'Wig Maintenance' },
+            ].map((topic, index) => (
+              <View key={index} style={styles.topicItem}>
+                <View style={styles.topicEmojiContainer}>
+                  <Text style={styles.topicEmoji}>{topic.emoji}</Text>
+                </View>
+                <Text style={[styles.topicText, { color: textColor }]}>
+                  {topic.text}
+                </Text>
+              </View>
+            ))}
           </View>
         </View>
 
-        <View style={[styles.rankCard, { backgroundColor: theme.dark ? '#2a2a2a' : colors.highlight }]}>
-          <Text style={[styles.rankTitle, { color: theme.dark ? '#ffffff' : colors.text }]}>
+        {/* Ranking System with Glass Effect */}
+        <View style={[styles.rankCard, glassStyles.glassCard]}>
+          <Text style={[styles.sectionTitle, { color: textColor }]}>
             Ranking System
           </Text>
-          <View style={styles.rankItem}>
-            <Text style={styles.rankEmoji}>🌱</Text>
-            <Text style={[styles.rankText, { color: theme.dark ? '#cccccc' : colors.textSecondary }]}>
-              0-16: Wig Rookie
-            </Text>
-          </View>
-          <View style={styles.rankItem}>
-            <Text style={styles.rankEmoji}>💜</Text>
-            <Text style={[styles.rankText, { color: theme.dark ? '#cccccc' : colors.textSecondary }]}>
-              17-32: Wig Enthusiast
-            </Text>
-          </View>
-          <View style={styles.rankItem}>
-            <Text style={styles.rankEmoji}>👑</Text>
-            <Text style={[styles.rankText, { color: theme.dark ? '#cccccc' : colors.textSecondary }]}>
-              33-48: Lace Master
-            </Text>
+          <View style={styles.rankList}>
+            <View style={styles.rankItem}>
+              <LinearGradient
+                colors={['rgba(200, 162, 200, 0.3)', 'rgba(247, 198, 208, 0.3)']}
+                style={styles.rankBadge}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+              >
+                <Text style={styles.rankEmoji}>🌱</Text>
+              </LinearGradient>
+              <View style={styles.rankTextContainer}>
+                <Text style={[styles.rankName, { color: textColor }]}>Wig Rookie</Text>
+                <Text style={[styles.rankScore, { color: secondaryTextColor }]}>0-16 correct</Text>
+              </View>
+            </View>
+            
+            <View style={styles.rankItem}>
+              <LinearGradient
+                colors={[colors.lavender, colors.blushPink]}
+                style={styles.rankBadge}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+              >
+                <Text style={styles.rankEmoji}>💜</Text>
+              </LinearGradient>
+              <View style={styles.rankTextContainer}>
+                <Text style={[styles.rankName, { color: textColor }]}>Wig Enthusiast</Text>
+                <Text style={[styles.rankScore, { color: secondaryTextColor }]}>17-32 correct</Text>
+              </View>
+            </View>
+            
+            <View style={styles.rankItem}>
+              <LinearGradient
+                colors={gradients.roseGoldShimmer}
+                style={[styles.rankBadge, glassStyles.glowEffect]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+              >
+                <Text style={styles.rankEmoji}>👑</Text>
+              </LinearGradient>
+              <View style={styles.rankTextContainer}>
+                <Text style={[styles.rankName, { color: textColor }]}>Lace Master</Text>
+                <Text style={[styles.rankScore, { color: secondaryTextColor }]}>33-48 correct</Text>
+              </View>
+            </View>
           </View>
         </View>
-      </View>
 
-      <Pressable 
-        style={({ pressed }) => [
-          styles.startButton,
-          { opacity: pressed ? 0.8 : 1 }
-        ]}
-        onPress={handleStartQuiz}
-      >
-        <LinearGradient
-          colors={theme.dark ? ['#7b1fa2', '#9c27b0'] : [colors.primary, colors.secondary]}
-          style={styles.buttonGradient}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 0 }}
+        {/* Start Button with Gradient */}
+        <Pressable 
+          style={({ pressed }) => [
+            styles.startButton,
+            { opacity: pressed ? 0.85 : 1 }
+          ]}
+          onPress={handleStartQuiz}
         >
-          <Text style={styles.buttonText}>Start Quiz</Text>
-          <IconSymbol 
-            ios_icon_name="arrow.right" 
-            android_material_icon_name="arrow-forward" 
-            size={24} 
-            color="#FFFFFF"
-          />
-        </LinearGradient>
-      </Pressable>
-    </ScrollView>
+          <LinearGradient
+            colors={gradients.plumRose}
+            style={styles.buttonGradient}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+          >
+            <Text style={styles.buttonText}>Begin Your Journey</Text>
+            <IconSymbol 
+              ios_icon_name="arrow.right" 
+              android_material_icon_name="arrow-forward" 
+              size={24} 
+              color={colors.cream}
+            />
+          </LinearGradient>
+        </Pressable>
+      </ScrollView>
+    </View>
   );
 }
 
@@ -189,130 +208,162 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  backgroundGradient: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+  },
+  scrollView: {
+    flex: 1,
+  },
   contentContainer: {
-    paddingTop: 60,
+    paddingTop: 70,
     paddingHorizontal: 24,
-    paddingBottom: 120,
+    paddingBottom: 140,
     alignItems: 'center',
   },
   header: {
     alignItems: 'center',
     marginBottom: 32,
   },
-  iconContainer: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 20,
-    boxShadow: '0px 4px 12px rgba(128, 0, 128, 0.3)',
-    elevation: 8,
+  emblem: {
+    marginBottom: 24,
   },
   title: {
-    fontSize: 42,
-    fontWeight: '800',
+    ...typography.heading1,
+    fontSize: 48,
     marginBottom: 8,
-    letterSpacing: -1,
+    textShadowColor: 'rgba(154, 78, 136, 0.2)',
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 8,
   },
   subtitle: {
-    fontSize: 18,
-    fontWeight: '500',
+    ...typography.body,
+    fontSize: 17,
+    fontStyle: 'italic',
   },
-  infoSection: {
+  glassCard: {
     width: '100%',
-    marginBottom: 32,
-  },
-  infoCard: {
-    borderRadius: 16,
-    padding: 20,
-    marginBottom: 16,
-    boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.1)',
-    elevation: 3,
+    padding: 24,
+    marginBottom: 20,
   },
   infoRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 16,
+    marginBottom: 20,
+  },
+  iconCircle: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: 'rgba(255, 255, 255, 0.6)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 16,
+    ...shadows.soft,
   },
   infoText: {
-    fontSize: 16,
-    marginLeft: 12,
+    ...typography.body,
     flex: 1,
-    lineHeight: 22,
+    fontWeight: '600',
   },
   topicsCard: {
-    borderRadius: 16,
-    padding: 20,
-    marginBottom: 16,
-    boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.1)',
-    elevation: 3,
+    width: '100%',
+    padding: 24,
+    marginBottom: 20,
   },
-  topicsTitle: {
-    fontSize: 20,
-    fontWeight: '700',
-    marginBottom: 16,
+  sectionTitle: {
+    ...typography.heading2,
+    fontSize: 24,
     textAlign: 'center',
+    marginBottom: 20,
   },
   topicsList: {
-    gap: 8,
+    gap: 12,
   },
   topicItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 8,
+    backgroundColor: 'rgba(255, 255, 255, 0.4)',
+    borderRadius: 16,
+    padding: 14,
+    ...shadows.soft,
+  },
+  topicEmojiContainer: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: 'rgba(255, 255, 255, 0.7)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
   },
   topicEmoji: {
-    fontSize: 20,
-    marginRight: 10,
+    fontSize: 22,
   },
   topicText: {
-    fontSize: 15,
-    fontWeight: '500',
+    ...typography.body,
+    fontWeight: '600',
+    flex: 1,
   },
   rankCard: {
-    borderRadius: 16,
-    padding: 20,
-    boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.1)',
-    elevation: 3,
+    width: '100%',
+    padding: 24,
+    marginBottom: 32,
   },
-  rankTitle: {
-    fontSize: 20,
-    fontWeight: '700',
-    marginBottom: 16,
-    textAlign: 'center',
+  rankList: {
+    gap: 16,
   },
   rankItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 12,
+  },
+  rankBadge: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 16,
+    borderWidth: 2,
+    borderColor: 'rgba(255, 255, 255, 0.6)',
+    ...shadows.soft,
   },
   rankEmoji: {
-    fontSize: 24,
-    marginRight: 12,
+    fontSize: 32,
   },
-  rankText: {
-    fontSize: 16,
-    fontWeight: '500',
+  rankTextContainer: {
+    flex: 1,
+  },
+  rankName: {
+    ...typography.heading3,
+    fontSize: 20,
+    marginBottom: 4,
+  },
+  rankScore: {
+    ...typography.caption,
+    fontSize: 15,
   },
   startButton: {
     width: '100%',
-    borderRadius: 16,
+    borderRadius: 28,
     overflow: 'hidden',
-    boxShadow: '0px 4px 12px rgba(128, 0, 128, 0.3)',
-    elevation: 6,
+    ...shadows.glow,
   },
   buttonGradient: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 18,
+    paddingVertical: 20,
     paddingHorizontal: 32,
+    gap: 12,
   },
   buttonText: {
-    color: '#FFFFFF',
-    fontSize: 20,
+    color: colors.cream,
+    fontSize: 22,
     fontWeight: '700',
-    marginRight: 8,
+    letterSpacing: 0.5,
   },
 });

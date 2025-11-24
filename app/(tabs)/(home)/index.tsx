@@ -6,7 +6,7 @@ import { useRouter } from "expo-router";
 import { colors, glassStyles, gradients, shadows, typography } from "@/styles/commonStyles";
 import { IconSymbol } from "@/components/IconSymbol";
 import { LinearGradient } from "expo-linear-gradient";
-import { BlurView } from "expo-blur";
+import { LaceFrontalEmblem } from "@/components/LaceFrontalEmblem";
 
 export default function HomeScreen() {
   const theme = useTheme();
@@ -38,23 +38,9 @@ export default function HomeScreen() {
         contentContainerStyle={styles.contentContainer}
         showsVerticalScrollIndicator={false}
       >
-        {/* Header with Glass Effect */}
+        {/* Header with Lace Frontal Emblem */}
         <View style={styles.header}>
-          <View style={[styles.iconGlassContainer, glassStyles.glowEffect]}>
-            <LinearGradient
-              colors={gradients.plumRose}
-              style={styles.iconGradient}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 1 }}
-            >
-              <IconSymbol 
-                ios_icon_name="sparkles" 
-                android_material_icon_name="auto-awesome" 
-                size={56} 
-                color={colors.cream}
-              />
-            </LinearGradient>
-          </View>
+          <LaceFrontalEmblem size={140} style={styles.emblem} />
           
           <Text style={[styles.title, { color: textColor }]}>
             Wig Wisdom
@@ -242,17 +228,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 32,
   },
-  iconGlassContainer: {
-    marginBottom: 20,
-  },
-  iconGradient: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 3,
-    borderColor: 'rgba(255, 255, 255, 0.5)',
+  emblem: {
+    marginBottom: 24,
   },
   title: {
     ...typography.heading1,
