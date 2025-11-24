@@ -61,9 +61,6 @@ export default function ProfileScreen() {
       case 'email':
         url = `mailto:${value}`;
         break;
-      case 'phone':
-        url = `tel:${value}`;
-        break;
       case 'website':
         url = value.startsWith('http') ? value : `https://${value}`;
         break;
@@ -348,38 +345,6 @@ export default function ProfileScreen() {
                 </Text>
                 <Text style={[styles.contactValue, { color: textColor }]}>
                   support@wigwisdom.com
-                </Text>
-              </View>
-              <IconSymbol 
-                ios_icon_name="chevron.right" 
-                android_material_icon_name="chevron-right" 
-                size={20} 
-                color={secondaryTextColor}
-              />
-            </Pressable>
-
-            <Pressable 
-              style={({ pressed }) => [
-                styles.contactItem,
-                glassStyles.glassButton,
-                { opacity: pressed ? 0.7 : 1 }
-              ]}
-              onPress={() => handleContactPress('phone', '+1-555-WIG-HELP')}
-            >
-              <View style={styles.contactIconWrapper}>
-                <IconSymbol 
-                  ios_icon_name="phone.fill" 
-                  android_material_icon_name="phone" 
-                  size={22} 
-                  color={colors.softPlum}
-                />
-              </View>
-              <View style={styles.contactTextContainer}>
-                <Text style={[styles.contactLabel, { color: secondaryTextColor }]}>
-                  Phone
-                </Text>
-                <Text style={[styles.contactValue, { color: textColor }]}>
-                  +1-555-WIG-HELP
                 </Text>
               </View>
               <IconSymbol 

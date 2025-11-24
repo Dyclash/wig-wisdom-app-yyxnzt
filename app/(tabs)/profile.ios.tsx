@@ -57,9 +57,6 @@ export default function ProfileScreen() {
       case 'email':
         url = `mailto:${value}`;
         break;
-      case 'phone':
-        url = `tel:${value}`;
-        break;
       case 'website':
         url = value.startsWith('http') ? value : `https://${value}`;
         break;
@@ -337,40 +334,6 @@ export default function ProfileScreen() {
                 </Text>
                 <Text style={[styles.contactValue, { color: theme.dark ? '#ffffff' : colors.text }]}>
                   support@wigwisdom.com
-                </Text>
-              </View>
-              <IconSymbol 
-                ios_icon_name="chevron.right" 
-                android_material_icon_name="chevron-right" 
-                size={20} 
-                color={theme.dark ? '#999999' : colors.textSecondary}
-              />
-            </Pressable>
-
-            <Pressable 
-              style={({ pressed }) => [
-                styles.contactItem,
-                { 
-                  backgroundColor: theme.dark ? '#3a3a3a' : colors.highlight,
-                  opacity: pressed ? 0.7 : 1 
-                }
-              ]}
-              onPress={() => handleContactPress('phone', '+1-555-WIG-HELP')}
-            >
-              <View style={[styles.contactIconWrapper, { backgroundColor: theme.dark ? '#4a4a4a' : 'rgba(200, 162, 200, 0.3)' }]}>
-                <IconSymbol 
-                  ios_icon_name="phone.fill" 
-                  android_material_icon_name="phone" 
-                  size={22} 
-                  color={theme.dark ? colors.secondary : colors.primary}
-                />
-              </View>
-              <View style={styles.contactTextContainer}>
-                <Text style={[styles.contactLabel, { color: theme.dark ? '#cccccc' : colors.textSecondary }]}>
-                  Phone
-                </Text>
-                <Text style={[styles.contactValue, { color: theme.dark ? '#ffffff' : colors.text }]}>
-                  +1-555-WIG-HELP
                 </Text>
               </View>
               <IconSymbol 

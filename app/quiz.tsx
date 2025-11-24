@@ -116,16 +116,11 @@ export default function QuizScreen() {
   };
 
   const handleTryAgainAfterFail = () => {
-    console.log('Try Again pressed - randomizing questions and restarting');
+    console.log('Try Again pressed - navigating to home page');
     const shuffled = shuffleQuestions(quizQuestions);
     setQuestions(shuffled);
-    setCurrentQuestionIndex(0);
-    setScore(0);
-    setIncorrectCount(0);
-    setSelectedAnswer(null);
-    setShowFeedback(false);
     setShowTryAgainModal(false);
-    fadeAnim.setValue(1);
+    router.replace('/(tabs)/(home)/');
   };
 
   const getAnswerStyle = (index: number) => {
