@@ -55,7 +55,7 @@ export default function HomeScreen() {
               color={theme.dark ? colors.secondary : colors.primary}
             />
             <Text style={[styles.infoText, { color: theme.dark ? '#ffffff' : colors.text }]}>
-              20 questions about wigs, care, and styling
+              48 comprehensive questions covering all aspects of wigs
             </Text>
           </View>
           
@@ -79,8 +79,58 @@ export default function HomeScreen() {
               color={theme.dark ? colors.accent : colors.accent}
             />
             <Text style={[styles.infoText, { color: theme.dark ? '#ffffff' : colors.text }]}>
-              Learn about lace types, installation, and maintenance
+              Master wig quality, installation, care, and maintenance
             </Text>
+          </View>
+        </View>
+
+        <View style={[styles.topicsCard, { backgroundColor: theme.dark ? '#2a2a2a' : colors.card }]}>
+          <Text style={[styles.topicsTitle, { color: theme.dark ? '#ffffff' : colors.text }]}>
+            Topics Covered
+          </Text>
+          <View style={styles.topicsList}>
+            <View style={styles.topicItem}>
+              <Text style={styles.topicEmoji}>💎</Text>
+              <Text style={[styles.topicText, { color: theme.dark ? '#cccccc' : colors.textSecondary }]}>
+                Wig Quality & Selection
+              </Text>
+            </View>
+            <View style={styles.topicItem}>
+              <Text style={styles.topicEmoji}>📏</Text>
+              <Text style={[styles.topicText, { color: theme.dark ? '#cccccc' : colors.textSecondary }]}>
+                Length & Density
+              </Text>
+            </View>
+            <View style={styles.topicItem}>
+              <Text style={styles.topicEmoji}>💡</Text>
+              <Text style={[styles.topicText, { color: theme.dark ? '#cccccc' : colors.textSecondary }]}>
+                Beginner Knowledge
+              </Text>
+            </View>
+            <View style={styles.topicItem}>
+              <Text style={styles.topicEmoji}>🛍️</Text>
+              <Text style={[styles.topicText, { color: theme.dark ? '#cccccc' : colors.textSecondary }]}>
+                Shopping & Buying
+              </Text>
+            </View>
+            <View style={styles.topicItem}>
+              <Text style={styles.topicEmoji}>🎯</Text>
+              <Text style={[styles.topicText, { color: theme.dark ? '#cccccc' : colors.textSecondary }]}>
+                Installation Methods
+              </Text>
+            </View>
+            <View style={styles.topicItem}>
+              <Text style={styles.topicEmoji}>💧</Text>
+              <Text style={[styles.topicText, { color: theme.dark ? '#cccccc' : colors.textSecondary }]}>
+                Wig Care
+              </Text>
+            </View>
+            <View style={styles.topicItem}>
+              <Text style={styles.topicEmoji}>🔥</Text>
+              <Text style={[styles.topicText, { color: theme.dark ? '#cccccc' : colors.textSecondary }]}>
+                Wig Maintenance
+              </Text>
+            </View>
           </View>
         </View>
 
@@ -91,19 +141,19 @@ export default function HomeScreen() {
           <View style={styles.rankItem}>
             <Text style={styles.rankEmoji}>🌱</Text>
             <Text style={[styles.rankText, { color: theme.dark ? '#cccccc' : colors.textSecondary }]}>
-              0-5: Wig Rookie
+              0-16: Wig Rookie
             </Text>
           </View>
           <View style={styles.rankItem}>
             <Text style={styles.rankEmoji}>💜</Text>
             <Text style={[styles.rankText, { color: theme.dark ? '#cccccc' : colors.textSecondary }]}>
-              6-12: Wig Enthusiast
+              17-32: Wig Enthusiast
             </Text>
           </View>
           <View style={styles.rankItem}>
             <Text style={styles.rankEmoji}>👑</Text>
             <Text style={[styles.rankText, { color: theme.dark ? '#cccccc' : colors.textSecondary }]}>
-              13-20: Lace Master
+              33-48: Lace Master
             </Text>
           </View>
         </View>
@@ -190,6 +240,35 @@ const styles = StyleSheet.create({
     marginLeft: 12,
     flex: 1,
     lineHeight: 22,
+  },
+  topicsCard: {
+    borderRadius: 16,
+    padding: 20,
+    marginBottom: 16,
+    boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.1)',
+    elevation: 3,
+  },
+  topicsTitle: {
+    fontSize: 20,
+    fontWeight: '700',
+    marginBottom: 16,
+    textAlign: 'center',
+  },
+  topicsList: {
+    gap: 8,
+  },
+  topicItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  topicEmoji: {
+    fontSize: 20,
+    marginRight: 10,
+  },
+  topicText: {
+    fontSize: 15,
+    fontWeight: '500',
   },
   rankCard: {
     borderRadius: 16,
