@@ -1,17 +1,19 @@
 
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView, Pressable } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, ScrollView, Pressable, Modal } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { colors } from '@/styles/commonStyles';
 import { IconSymbol } from '@/components/IconSymbol';
 import { LinearGradient } from 'expo-linear-gradient';
 import { RankType } from '@/types/quiz';
+import { PageControls } from '@/components/PageControls';
 
 export default function ResultsScreen() {
   const theme = useTheme();
   const router = useRouter();
   const params = useLocalSearchParams();
+  const [showPauseInfo, setShowPauseInfo] = useState(false);
   
   const score = parseInt(params.score as string) || 0;
   const total = parseInt(params.total as string) || 20;
@@ -51,153 +53,206 @@ export default function ResultsScreen() {
     router.replace('/(tabs)/(home)/');
   };
 
+  const handlePause = () => {
+    console.log('Pause info shown on results page');
+    setShowPauseInfo(true);
+  };
+
   return (
-    <ScrollView 
-      style={[styles.container, { backgroundColor: theme.dark ? '#1a1a1a' : colors.background }]}
-      contentContainerStyle={styles.contentContainer}
-    >
-      <View style={styles.header}>
-        <Text style={styles.emoji}>{emoji}</Text>
-        <Text style={[styles.title, { color: theme.dark ? '#ffffff' : colors.text }]}>
-          Quiz Complete!
-        </Text>
-      </View>
+    <View style={[styles.container, { backgroundColor: theme.dark ? '#1a1a1a' : colors.background }]}>
+      <PageControls onPause={handlePause} showPause={true} />
+      
+      <ScrollView 
+        style={styles.scrollView}
+        contentContainerStyle={styles.contentContainer}
+      >
+        <View style={styles.header}>
+          <Text style={styles.emoji}>{emoji}</Text>
+          <Text style={[styles.title, { color: theme.dark ? '#ffffff' : colors.text }]}>
+            Quiz Complete!
+          </Text>
+        </View>
 
-      <View style={[styles.scoreCard, { backgroundColor: theme.dark ? '#2a2a2a' : colors.card }]}>
-        <LinearGradient
-          colors={theme.dark ? ['#7b1fa2', '#9c27b0'] : [colors.primary, colors.secondary]}
-          style={styles.scoreCircle}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-        >
-          <Text style={styles.scoreNumber}>{score}</Text>
-          <Text style={styles.scoreTotal}>/ {total}</Text>
-        </LinearGradient>
-        
-        <Text style={[styles.percentage, { color: theme.dark ? '#ffffff' : colors.text }]}>
-          {percentage}% Correct
-        </Text>
-      </View>
-
-      <View style={[styles.rankCard, { backgroundColor: theme.dark ? '#2a2a2a' : colors.highlight }]}>
-        <View style={styles.rankBadge}>
+        <View style={[styles.scoreCard, { backgroundColor: theme.dark ? '#2a2a2a' : colors.card }]}>
           <LinearGradient
-            colors={theme.dark ? ['#ffd700', '#ffed4e'] : [colors.accent, '#FFE55C']}
-            style={styles.badgeGradient}
+            colors={theme.dark ? ['#7b1fa2', '#9c27b0'] : [colors.primary, colors.secondary]}
+            style={styles.scoreCircle}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
           >
-            <IconSymbol 
-              ios_icon_name="star.fill" 
-              android_material_icon_name="star" 
-              size={32} 
-              color={theme.dark ? '#7b1fa2' : colors.primary}
-            />
+            <Text style={styles.scoreNumber}>{score}</Text>
+            <Text style={styles.scoreTotal}>/ {total}</Text>
           </LinearGradient>
+          
+          <Text style={[styles.percentage, { color: theme.dark ? '#ffffff' : colors.text }]}>
+            {percentage}% Correct
+          </Text>
         </View>
-        
-        <Text style={[styles.rankTitle, { color: theme.dark ? '#ffffff' : colors.text }]}>
-          Your Rank
-        </Text>
-        <Text style={[styles.rankName, { color: theme.dark ? colors.secondary : colors.primary }]}>
-          {rank}
-        </Text>
-        <Text style={[styles.rankMessage, { color: theme.dark ? '#cccccc' : colors.textSecondary }]}>
-          {message}
-        </Text>
-      </View>
 
-      <View style={[styles.statsCard, { backgroundColor: theme.dark ? '#2a2a2a' : colors.card }]}>
-        <Text style={[styles.statsTitle, { color: theme.dark ? '#ffffff' : colors.text }]}>
-          Performance Breakdown
-        </Text>
-        
-        <View style={styles.statRow}>
-          <View style={styles.statItem}>
-            <IconSymbol 
-              ios_icon_name="checkmark.circle.fill" 
-              android_material_icon_name="check-circle" 
-              size={24} 
-              color="#4CAF50"
-            />
-            <Text style={[styles.statLabel, { color: theme.dark ? '#cccccc' : colors.textSecondary }]}>
-              Correct
-            </Text>
-            <Text style={[styles.statValue, { color: theme.dark ? '#ffffff' : colors.text }]}>
-              {score}
-            </Text>
+        <View style={[styles.rankCard, { backgroundColor: theme.dark ? '#2a2a2a' : colors.highlight }]}>
+          <View style={styles.rankBadge}>
+            <LinearGradient
+              colors={theme.dark ? ['#ffd700', '#ffed4e'] : [colors.accent, '#FFE55C']}
+              style={styles.badgeGradient}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+            >
+              <IconSymbol 
+                ios_icon_name="star.fill" 
+                android_material_icon_name="star" 
+                size={32} 
+                color={theme.dark ? '#7b1fa2' : colors.primary}
+              />
+            </LinearGradient>
           </View>
           
-          <View style={styles.statDivider} />
+          <Text style={[styles.rankTitle, { color: theme.dark ? '#ffffff' : colors.text }]}>
+            Your Rank
+          </Text>
+          <Text style={[styles.rankName, { color: theme.dark ? colors.secondary : colors.primary }]}>
+            {rank}
+          </Text>
+          <Text style={[styles.rankMessage, { color: theme.dark ? '#cccccc' : colors.textSecondary }]}>
+            {message}
+          </Text>
+        </View>
+
+        <View style={[styles.statsCard, { backgroundColor: theme.dark ? '#2a2a2a' : colors.card }]}>
+          <Text style={[styles.statsTitle, { color: theme.dark ? '#ffffff' : colors.text }]}>
+            Performance Breakdown
+          </Text>
           
-          <View style={styles.statItem}>
-            <IconSymbol 
-              ios_icon_name="xmark.circle.fill" 
-              android_material_icon_name="cancel" 
-              size={24} 
-              color="#F44336"
-            />
-            <Text style={[styles.statLabel, { color: theme.dark ? '#cccccc' : colors.textSecondary }]}>
-              Incorrect
-            </Text>
-            <Text style={[styles.statValue, { color: theme.dark ? '#ffffff' : colors.text }]}>
-              {total - score}
-            </Text>
+          <View style={styles.statRow}>
+            <View style={styles.statItem}>
+              <IconSymbol 
+                ios_icon_name="checkmark.circle.fill" 
+                android_material_icon_name="check-circle" 
+                size={24} 
+                color="#4CAF50"
+              />
+              <Text style={[styles.statLabel, { color: theme.dark ? '#cccccc' : colors.textSecondary }]}>
+                Correct
+              </Text>
+              <Text style={[styles.statValue, { color: theme.dark ? '#ffffff' : colors.text }]}>
+                {score}
+              </Text>
+            </View>
+            
+            <View style={styles.statDivider} />
+            
+            <View style={styles.statItem}>
+              <IconSymbol 
+                ios_icon_name="xmark.circle.fill" 
+                android_material_icon_name="cancel" 
+                size={24} 
+                color="#F44336"
+              />
+              <Text style={[styles.statLabel, { color: theme.dark ? '#cccccc' : colors.textSecondary }]}>
+                Incorrect
+              </Text>
+              <Text style={[styles.statValue, { color: theme.dark ? '#ffffff' : colors.text }]}>
+                {total - score}
+              </Text>
+            </View>
           </View>
         </View>
-      </View>
 
-      <View style={styles.buttonContainer}>
-        <Pressable 
-          style={({ pressed }) => [
-            styles.button,
-            { opacity: pressed ? 0.8 : 1 }
-          ]}
-          onPress={handleTryAgain}
-        >
-          <LinearGradient
-            colors={theme.dark ? ['#7b1fa2', '#9c27b0'] : [colors.primary, colors.secondary]}
-            style={styles.buttonGradient}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
+        <View style={styles.buttonContainer}>
+          <Pressable 
+            style={({ pressed }) => [
+              styles.button,
+              { opacity: pressed ? 0.8 : 1 }
+            ]}
+            onPress={handleTryAgain}
+          >
+            <LinearGradient
+              colors={theme.dark ? ['#7b1fa2', '#9c27b0'] : [colors.primary, colors.secondary]}
+              style={styles.buttonGradient}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+            >
+              <IconSymbol 
+                ios_icon_name="arrow.clockwise" 
+                android_material_icon_name="refresh" 
+                size={24} 
+                color="#FFFFFF"
+              />
+              <Text style={styles.buttonText}>Try Again</Text>
+            </LinearGradient>
+          </Pressable>
+
+          <Pressable 
+            style={({ pressed }) => [
+              styles.secondaryButton,
+              { 
+                backgroundColor: theme.dark ? '#333333' : colors.highlight,
+                opacity: pressed ? 0.8 : 1 
+              }
+            ]}
+            onPress={handleGoHome}
           >
             <IconSymbol 
-              ios_icon_name="arrow.clockwise" 
-              android_material_icon_name="refresh" 
+              ios_icon_name="house.fill" 
+              android_material_icon_name="home" 
               size={24} 
-              color="#FFFFFF"
+              color={theme.dark ? colors.secondary : colors.primary}
             />
-            <Text style={styles.buttonText}>Try Again</Text>
-          </LinearGradient>
-        </Pressable>
+            <Text style={[styles.secondaryButtonText, { color: theme.dark ? colors.secondary : colors.primary }]}>
+              Back to Home
+            </Text>
+          </Pressable>
+        </View>
+      </ScrollView>
 
-        <Pressable 
-          style={({ pressed }) => [
-            styles.secondaryButton,
-            { 
-              backgroundColor: theme.dark ? '#333333' : colors.highlight,
-              opacity: pressed ? 0.8 : 1 
-            }
-          ]}
-          onPress={handleGoHome}
-        >
-          <IconSymbol 
-            ios_icon_name="house.fill" 
-            android_material_icon_name="home" 
-            size={24} 
-            color={theme.dark ? colors.secondary : colors.primary}
-          />
-          <Text style={[styles.secondaryButtonText, { color: theme.dark ? colors.secondary : colors.primary }]}>
-            Back to Home
-          </Text>
-        </Pressable>
-      </View>
-    </ScrollView>
+      {/* Info Modal */}
+      <Modal
+        visible={showPauseInfo}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setShowPauseInfo(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={[styles.infoModal, { backgroundColor: theme.dark ? '#2a2a2a' : colors.card }]}>
+            <IconSymbol 
+              ios_icon_name="info.circle.fill" 
+              android_material_icon_name="info" 
+              size={64} 
+              color={theme.dark ? colors.secondary : colors.primary}
+            />
+            <Text style={[styles.infoTitle, { color: theme.dark ? '#ffffff' : colors.text }]}>
+              Quiz Completed!
+            </Text>
+            <Text style={[styles.infoText, { color: theme.dark ? '#cccccc' : colors.textSecondary }]}>
+              You&apos;ve finished the quiz. Review your results or start a new quiz to improve your score!
+            </Text>
+            <Pressable 
+              style={({ pressed }) => [
+                styles.infoButton,
+                { opacity: pressed ? 0.8 : 1 }
+              ]}
+              onPress={() => setShowPauseInfo(false)}
+            >
+              <LinearGradient
+                colors={theme.dark ? ['#7b1fa2', '#9c27b0'] : [colors.primary, colors.secondary]}
+                style={styles.infoButtonGradient}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+              >
+                <Text style={styles.infoButtonText}>Got it!</Text>
+              </LinearGradient>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+  },
+  scrollView: {
     flex: 1,
   },
   contentContainer: {
@@ -363,5 +418,53 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '700',
     marginLeft: 8,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 24,
+  },
+  infoModal: {
+    borderRadius: 20,
+    padding: 32,
+    alignItems: 'center',
+    width: '100%',
+    maxWidth: 400,
+    boxShadow: '0px 4px 16px rgba(0, 0, 0, 0.3)',
+    elevation: 8,
+  },
+  infoTitle: {
+    fontSize: 28,
+    fontWeight: '800',
+    marginTop: 16,
+    marginBottom: 12,
+    textAlign: 'center',
+  },
+  infoText: {
+    fontSize: 16,
+    textAlign: 'center',
+    marginBottom: 24,
+    lineHeight: 24,
+  },
+  infoButton: {
+    width: '100%',
+    borderRadius: 16,
+    overflow: 'hidden',
+    boxShadow: '0px 4px 12px rgba(128, 0, 128, 0.3)',
+    elevation: 6,
+  },
+  infoButtonGradient: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 16,
+    paddingHorizontal: 32,
+  },
+  infoButtonText: {
+    color: '#FFFFFF',
+    fontSize: 18,
+    fontWeight: '700',
   },
 });

@@ -1,16 +1,18 @@
 
 import React, { useState } from "react";
-import { View, Text, StyleSheet, ScrollView, Platform, Pressable } from "react-native";
+import { View, Text, StyleSheet, ScrollView, Platform, Pressable, Modal } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { IconSymbol } from "@/components/IconSymbol";
 import { useTheme } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import { colors } from "@/styles/commonStyles";
 import { useRouter } from "expo-router";
+import { PageControls } from "@/components/PageControls";
 
 export default function ProfileScreen() {
   const theme = useTheme();
   const router = useRouter();
+  const [showPauseInfo, setShowPauseInfo] = useState(false);
 
   // Mock data - in a real app, this would come from state management or backend
   const [userStats] = useState({
@@ -43,8 +45,15 @@ export default function ProfileScreen() {
     router.push('/quiz');
   };
 
+  const handlePause = () => {
+    console.log('Pause info shown on profile page');
+    setShowPauseInfo(true);
+  };
+
   return (
     <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.dark ? '#1a1a1a' : theme.colors.background }]} edges={['top']}>
+      <PageControls onPause={handlePause} showPause={true} />
+      
       <ScrollView
         style={styles.container}
         contentContainerStyle={[
@@ -273,6 +282,47 @@ export default function ProfileScreen() {
           </LinearGradient>
         </Pressable>
       </ScrollView>
+
+      {/* Info Modal */}
+      <Modal
+        visible={showPauseInfo}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setShowPauseInfo(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={[styles.infoModal, { backgroundColor: theme.dark ? '#2a2a2a' : colors.card }]}>
+            <IconSymbol 
+              ios_icon_name="info.circle.fill" 
+              android_material_icon_name="info" 
+              size={64} 
+              color={theme.dark ? colors.secondary : colors.primary}
+            />
+            <Text style={[styles.infoTitle, { color: theme.dark ? '#ffffff' : colors.text }]}>
+              Profile Page
+            </Text>
+            <Text style={[styles.infoText, { color: theme.dark ? '#cccccc' : colors.textSecondary }]}>
+              View your quiz statistics, achievements, and recent scores. Start a new quiz to improve your ranking!
+            </Text>
+            <Pressable 
+              style={({ pressed }) => [
+                styles.infoButton,
+                { opacity: pressed ? 0.8 : 1 }
+              ]}
+              onPress={() => setShowPauseInfo(false)}
+            >
+              <LinearGradient
+                colors={theme.dark ? ['#7b1fa2', '#9c27b0'] : [colors.primary, colors.secondary]}
+                style={styles.infoButtonGradient}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+              >
+                <Text style={styles.infoButtonText}>Got it!</Text>
+              </LinearGradient>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -286,6 +336,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     padding: 20,
+    paddingTop: 100,
   },
   contentContainerWithTabBar: {
     paddingBottom: 100,
@@ -484,5 +535,53 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '700',
     marginLeft: 8,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 24,
+  },
+  infoModal: {
+    borderRadius: 20,
+    padding: 32,
+    alignItems: 'center',
+    width: '100%',
+    maxWidth: 400,
+    boxShadow: '0px 4px 16px rgba(0, 0, 0, 0.3)',
+    elevation: 8,
+  },
+  infoTitle: {
+    fontSize: 28,
+    fontWeight: '800',
+    marginTop: 16,
+    marginBottom: 12,
+    textAlign: 'center',
+  },
+  infoText: {
+    fontSize: 16,
+    textAlign: 'center',
+    marginBottom: 24,
+    lineHeight: 24,
+  },
+  infoButton: {
+    width: '100%',
+    borderRadius: 16,
+    overflow: 'hidden',
+    boxShadow: '0px 4px 12px rgba(128, 0, 128, 0.3)',
+    elevation: 6,
+  },
+  infoButtonGradient: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 16,
+    paddingHorizontal: 32,
+  },
+  infoButtonText: {
+    color: '#FFFFFF',
+    fontSize: 18,
+    fontWeight: '700',
   },
 });

@@ -1,12 +1,13 @@
 
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, Pressable, Animated } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Pressable, Animated, Modal } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
 import { colors } from '@/styles/commonStyles';
 import { IconSymbol } from '@/components/IconSymbol';
 import { quizQuestions } from '@/data/quizQuestions';
 import { LinearGradient } from 'expo-linear-gradient';
+import { PageControls } from '@/components/PageControls';
 
 interface ShuffledQuestion {
   options: string[];
@@ -22,6 +23,7 @@ export default function QuizScreen() {
   const [showFeedback, setShowFeedback] = useState(false);
   const [fadeAnim] = useState(new Animated.Value(1));
   const [shuffledQuestion, setShuffledQuestion] = useState<ShuffledQuestion | null>(null);
+  const [isPaused, setIsPaused] = useState(false);
 
   const currentQuestion = quizQuestions[currentQuestionIndex];
   const progress = ((currentQuestionIndex + 1) / quizQuestions.length) * 100;
@@ -102,6 +104,16 @@ export default function QuizScreen() {
     }, 1500);
   };
 
+  const handlePause = () => {
+    console.log('Quiz paused');
+    setIsPaused(true);
+  };
+
+  const handleResume = () => {
+    console.log('Quiz resumed');
+    setIsPaused(false);
+  };
+
   const getAnswerStyle = (index: number) => {
     if (!showFeedback || !shuffledQuestion) {
       return styles.optionButton;
@@ -133,6 +145,8 @@ export default function QuizScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.dark ? '#1a1a1a' : colors.background }]}>
+      <PageControls onPause={handlePause} showPause={true} />
+
       <View style={styles.header}>
         <View style={styles.progressContainer}>
           <View style={[styles.progressBar, { backgroundColor: theme.dark ? '#333333' : colors.highlight }]}>
@@ -252,6 +266,59 @@ export default function QuizScreen() {
           )}
         </Animated.View>
       </ScrollView>
+
+      {/* Pause Modal */}
+      <Modal
+        visible={isPaused}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={handleResume}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={[styles.pauseModal, { backgroundColor: theme.dark ? '#2a2a2a' : colors.card }]}>
+            <IconSymbol 
+              ios_icon_name="pause.circle.fill" 
+              android_material_icon_name="pause-circle" 
+              size={64} 
+              color={theme.dark ? colors.accent : colors.accent}
+            />
+            <Text style={[styles.pauseTitle, { color: theme.dark ? '#ffffff' : colors.text }]}>
+              Quiz Paused
+            </Text>
+            <Text style={[styles.pauseText, { color: theme.dark ? '#cccccc' : colors.textSecondary }]}>
+              Take your time! Your progress is saved.
+            </Text>
+            <Text style={[styles.pauseProgress, { color: theme.dark ? colors.secondary : colors.primary }]}>
+              Question {currentQuestionIndex + 1} of {quizQuestions.length}
+            </Text>
+            <Text style={[styles.pauseScore, { color: theme.dark ? '#ffffff' : colors.text }]}>
+              Current Score: {score}
+            </Text>
+            <Pressable 
+              style={({ pressed }) => [
+                styles.resumeButton,
+                { opacity: pressed ? 0.8 : 1 }
+              ]}
+              onPress={handleResume}
+            >
+              <LinearGradient
+                colors={theme.dark ? ['#7b1fa2', '#9c27b0'] : [colors.primary, colors.secondary]}
+                style={styles.resumeButtonGradient}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+              >
+                <IconSymbol 
+                  ios_icon_name="play.fill" 
+                  android_material_icon_name="play-arrow" 
+                  size={24} 
+                  color="#FFFFFF"
+                />
+                <Text style={styles.resumeButtonText}>Resume Quiz</Text>
+              </LinearGradient>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -380,5 +447,62 @@ const styles = StyleSheet.create({
   feedbackText: {
     fontSize: 15,
     lineHeight: 22,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 24,
+  },
+  pauseModal: {
+    borderRadius: 20,
+    padding: 32,
+    alignItems: 'center',
+    width: '100%',
+    maxWidth: 400,
+    boxShadow: '0px 4px 16px rgba(0, 0, 0, 0.3)',
+    elevation: 8,
+  },
+  pauseTitle: {
+    fontSize: 28,
+    fontWeight: '800',
+    marginTop: 16,
+    marginBottom: 8,
+  },
+  pauseText: {
+    fontSize: 16,
+    textAlign: 'center',
+    marginBottom: 16,
+  },
+  pauseProgress: {
+    fontSize: 18,
+    fontWeight: '700',
+    marginBottom: 8,
+  },
+  pauseScore: {
+    fontSize: 20,
+    fontWeight: '700',
+    marginBottom: 24,
+  },
+  resumeButton: {
+    width: '100%',
+    borderRadius: 16,
+    overflow: 'hidden',
+    boxShadow: '0px 4px 12px rgba(128, 0, 128, 0.3)',
+    elevation: 6,
+  },
+  resumeButtonGradient: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 16,
+    paddingHorizontal: 32,
+  },
+  resumeButtonText: {
+    color: '#FFFFFF',
+    fontSize: 18,
+    fontWeight: '700',
+    marginLeft: 8,
   },
 });
