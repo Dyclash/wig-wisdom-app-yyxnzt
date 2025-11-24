@@ -241,5 +241,201 @@ export const quizQuestions: Question[] = [
     ],
     correctAnswer: 2,
     explanation: 'With proper care and maintenance, a quality human hair wig can last 1-2 years or longer.'
+  },
+  // 💎 Wig Quality Section
+  {
+    id: 21,
+    question: 'What is the strongest indicator of a good wig?',
+    options: [
+      'Thick knots',
+      'Soft lace, natural density',
+      'Crunchy ends',
+      'Strong chemical smell'
+    ],
+    correctAnswer: 1,
+    explanation: 'Soft lace and natural density are key indicators of a high-quality wig that will look natural and feel comfortable.'
+  },
+  {
+    id: 22,
+    question: 'What does "pre-plucked" mean?',
+    options: [
+      'Hairline looks more natural',
+      'Wig is curly',
+      'Wig is straight',
+      'Wig is synthetic'
+    ],
+    correctAnswer: 0,
+    explanation: 'Pre-plucked wigs have had hairs strategically removed from the hairline to create a more natural, realistic appearance.'
+  },
+  {
+    id: 23,
+    question: 'What determines how natural the hairline looks?',
+    options: [
+      'Density',
+      'Cap color',
+      'Wig length',
+      'Texture'
+    ],
+    correctAnswer: 0,
+    explanation: 'The density of the hairline is crucial for achieving a natural look - too dense looks fake, while proper density mimics natural hair growth.'
+  },
+  {
+    id: 24,
+    question: 'What makes a frontal more versatile?',
+    options: [
+      'Can part anywhere',
+      'Cheaper',
+      'Only middle part',
+      'Stiffer lace'
+    ],
+    correctAnswer: 0,
+    explanation: 'Frontals allow you to part your hair anywhere along the hairline, giving you maximum styling versatility.'
+  },
+  // 📏 Length & Density Section
+  {
+    id: 25,
+    question: 'Which density looks most natural?',
+    options: [
+      '150%',
+      '250%',
+      '400%',
+      '50%'
+    ],
+    correctAnswer: 0,
+    explanation: '150% density closely mimics natural hair thickness and looks the most realistic for everyday wear.'
+  },
+  {
+    id: 26,
+    question: 'What length is considered "shoulder length"?',
+    options: [
+      '6 inch',
+      '10 inch',
+      '12 inch',
+      '22 inch'
+    ],
+    correctAnswer: 2,
+    explanation: '12 inches typically falls right at shoulder length for most people, making it a popular mid-length choice.'
+  },
+  {
+    id: 27,
+    question: 'Which length is most popular for everyday wear?',
+    options: [
+      '8 inch',
+      '12 inch',
+      '16 inch',
+      '36 inch'
+    ],
+    correctAnswer: 2,
+    explanation: '16 inches is the most popular length as it offers versatility, is easy to manage, and looks natural for daily wear.'
+  },
+  {
+    id: 28,
+    question: 'Longer wigs require more:',
+    options: [
+      'Washing',
+      'Detangling',
+      'Moisture',
+      'All of the above'
+    ],
+    correctAnswer: 3,
+    explanation: 'Longer wigs need more frequent washing, careful detangling, and extra moisture to prevent dryness and tangling.'
+  },
+  // 💡 Beginner Knowledge Section
+  {
+    id: 29,
+    question: 'Which wig is easiest for beginners?',
+    options: [
+      'T-part',
+      'Headband wig',
+      '360 frontal',
+      'Full lace'
+    ],
+    correctAnswer: 1,
+    explanation: 'Headband wigs are the easiest for beginners as they require no glue, minimal styling, and can be put on quickly.'
+  },
+  {
+    id: 30,
+    question: 'Which wig allows quick throw-on styling?',
+    options: [
+      'Glueless headband wig',
+      'Full lace',
+      'Closure 5×5',
+      'Hot comb install'
+    ],
+    correctAnswer: 0,
+    explanation: 'Glueless headband wigs are designed for quick application - just put it on, adjust the band, and go!'
+  },
+  {
+    id: 31,
+    question: 'Which wig requires the MOST skill to install?',
+    options: [
+      'Closure wig',
+      'Headband wig',
+      'Full lace frontal',
+      'U-part'
+    ],
+    correctAnswer: 2,
+    explanation: 'Full lace frontals require the most skill as they need precise cutting, bleaching, plucking, and adhesive application.'
+  },
+  {
+    id: 32,
+    question: 'Which wig is best for the gym?',
+    options: [
+      'Glueless bun strap wig',
+      'HD frontal',
+      'Synthetic straight',
+      '360 lace'
+    ],
+    correctAnswer: 0,
+    explanation: 'Glueless bun strap wigs are perfect for the gym - they stay secure during workouts and look natural while being easy to remove.'
+  },
+  // 🛍️ Shopping & Buying Section
+  {
+    id: 33,
+    question: 'Which sign shows a wig seller is untrustworthy?',
+    options: [
+      'Customer reviews',
+      'HD lace options',
+      'Extremely low prices',
+      'Videos of installs'
+    ],
+    correctAnswer: 2,
+    explanation: 'Extremely low prices are often a red flag - quality wigs have a cost, and prices that seem too good to be true usually are.'
+  },
+  {
+    id: 34,
+    question: 'If a wig has a chemical smell, what does it mean?',
+    options: [
+      'High quality',
+      'Fresh hair',
+      'Heavy processing',
+      'Natural scent'
+    ],
+    correctAnswer: 2,
+    explanation: 'A strong chemical smell indicates heavy processing with harsh chemicals, which can affect the wig\'s quality and longevity.'
+  },
+  {
+    id: 35,
+    question: 'Which hair origin is known for thickness and durability?',
+    options: [
+      'Brazilian',
+      'Malaysian',
+      'Peruvian',
+      'Russian'
+    ],
+    correctAnswer: 0,
+    explanation: 'Brazilian hair is renowned for its thickness, durability, and ability to hold curls well, making it a popular choice.'
+  },
+  {
+    id: 36,
+    question: 'Which shipping method keeps wigs from tangling?',
+    options: [
+      'Vacuum seal bag',
+      'Plastic grocery bag',
+      'Cardboard only',
+      'Paper towel wrap'
+    ],
+    correctAnswer: 0,
+    explanation: 'Vacuum seal bags compress the wig securely, preventing movement and tangling during shipping while protecting it from moisture.'
   }
 ];
