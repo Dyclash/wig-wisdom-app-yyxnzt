@@ -8,6 +8,8 @@ import { IconSymbol } from '@/components/IconSymbol';
 import { quizQuestions } from '@/data/quizQuestions';
 import { LinearGradient } from 'expo-linear-gradient';
 import { PageControls } from '@/components/PageControls';
+import { Question } from '@/types/quiz';
+import { shuffleQuestions, shuffleAnswers } from '@/utils/quizHelpers';
 
 interface ShuffledQuestion {
   options: string[];
@@ -17,16 +19,19 @@ interface ShuffledQuestion {
 export default function QuizScreen() {
   const theme = useTheme();
   const router = useRouter();
+  const [questions, setQuestions] = useState<Question[]>(quizQuestions);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [score, setScore] = useState(0);
+  const [incorrectCount, setIncorrectCount] = useState(0);
   const [showFeedback, setShowFeedback] = useState(false);
   const [fadeAnim] = useState(new Animated.Value(1));
   const [shuffledQuestion, setShuffledQuestion] = useState<ShuffledQuestion | null>(null);
   const [isPaused, setIsPaused] = useState(false);
+  const [showTryAgainModal, setShowTryAgainModal] = useState(false);
 
-  const currentQuestion = quizQuestions[currentQuestionIndex];
-  const progress = ((currentQuestionIndex + 1) / quizQuestions.length) * 100;
+  const currentQuestion = questions[currentQuestionIndex];
+  const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
 
   const bgColor = theme.dark ? colors.backgroundDark : colors.background;
   const textColor = theme.dark ? colors.textLight : colors.text;
@@ -36,26 +41,7 @@ export default function QuizScreen() {
     console.log(`Loading question ${currentQuestionIndex + 1}`);
     const shuffled = shuffleAnswers(currentQuestion.options, currentQuestion.correctAnswer);
     setShuffledQuestion(shuffled);
-  }, [currentQuestionIndex]);
-
-  const shuffleAnswers = (options: string[], correctAnswerIndex: number): ShuffledQuestion => {
-    const indices = options.map((_, index) => index);
-    
-    for (let i = indices.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [indices[i], indices[j]] = [indices[j], indices[i]];
-    }
-    
-    const shuffledOptions = indices.map(index => options[index]);
-    const newCorrectIndex = indices.indexOf(correctAnswerIndex);
-    
-    console.log(`Shuffled answers for question ${currentQuestionIndex + 1}. Correct answer now at index ${newCorrectIndex}`);
-    
-    return {
-      options: shuffledOptions,
-      correctAnswerIndex: newCorrectIndex
-    };
-  };
+  }, [currentQuestionIndex, questions]);
 
   const handleAnswerSelect = (answerIndex: number) => {
     if (showFeedback || !shuffledQuestion) return;
@@ -70,11 +56,21 @@ export default function QuizScreen() {
       setScore(score + 1);
       console.log(`Correct! Score: ${score + 1}`);
     } else {
-      console.log('Incorrect answer');
+      const newIncorrectCount = incorrectCount + 1;
+      setIncorrectCount(newIncorrectCount);
+      console.log(`Incorrect answer. Total incorrect: ${newIncorrectCount}`);
+      
+      if (newIncorrectCount === 10) {
+        console.log('User failed 10 questions - showing Try Again modal');
+        setTimeout(() => {
+          setShowTryAgainModal(true);
+        }, 1500);
+        return;
+      }
     }
 
     setTimeout(() => {
-      if (currentQuestionIndex < quizQuestions.length - 1) {
+      if (currentQuestionIndex < questions.length - 1) {
         Animated.timing(fadeAnim, {
           toValue: 0,
           duration: 200,
@@ -95,7 +91,7 @@ export default function QuizScreen() {
           pathname: '/results',
           params: { 
             score: score + (isCorrect ? 1 : 0),
-            total: quizQuestions.length 
+            total: questions.length 
           }
         });
       }
@@ -110,6 +106,26 @@ export default function QuizScreen() {
   const handleResume = () => {
     console.log('Quiz resumed');
     setIsPaused(false);
+  };
+
+  const handleGoHome = () => {
+    console.log('Going home - randomizing questions');
+    const shuffled = shuffleQuestions(quizQuestions);
+    setQuestions(shuffled);
+    router.replace('/(tabs)/(home)/');
+  };
+
+  const handleTryAgainAfterFail = () => {
+    console.log('Try Again pressed - randomizing questions and restarting');
+    const shuffled = shuffleQuestions(quizQuestions);
+    setQuestions(shuffled);
+    setCurrentQuestionIndex(0);
+    setScore(0);
+    setIncorrectCount(0);
+    setSelectedAnswer(null);
+    setShowFeedback(false);
+    setShowTryAgainModal(false);
+    fadeAnim.setValue(1);
   };
 
   const getAnswerStyle = (index: number) => {
@@ -159,7 +175,7 @@ export default function QuizScreen() {
         end={{ x: 1, y: 1 }}
       />
       
-      <PageControls onPause={handlePause} showPause={true} />
+      <PageControls onPause={handlePause} onGoHome={handleGoHome} showPause={true} />
 
       <View style={styles.header}>
         <View style={[styles.progressCard, glassStyles.glassCard]}>
@@ -172,7 +188,7 @@ export default function QuizScreen() {
             />
           </View>
           <Text style={[styles.progressText, { color: secondaryTextColor }]}>
-            Question {currentQuestionIndex + 1} of {quizQuestions.length}
+            Question {currentQuestionIndex + 1} of {questions.length}
           </Text>
         </View>
       </View>
@@ -319,7 +335,7 @@ export default function QuizScreen() {
               Take your time! Your progress is saved.
             </Text>
             <Text style={[styles.pauseProgress, { color: colors.softPlum }]}>
-              Question {currentQuestionIndex + 1} of {quizQuestions.length}
+              Question {currentQuestionIndex + 1} of {questions.length}
             </Text>
             <Text style={[styles.pauseScore, { color: textColor }]}>
               Current Score: {score}
@@ -344,6 +360,62 @@ export default function QuizScreen() {
                   color={colors.cream}
                 />
                 <Text style={styles.resumeButtonText}>Resume Quiz</Text>
+              </LinearGradient>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
+
+      <Modal
+        visible={showTryAgainModal}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setShowTryAgainModal(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={[styles.tryAgainModal, glassStyles.glassCard]}>
+            <LinearGradient
+              colors={[colors.error, '#FFCDD2']}
+              style={styles.tryAgainIconContainer}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+            >
+              <IconSymbol 
+                ios_icon_name="arrow.clockwise.circle.fill" 
+                android_material_icon_name="refresh" 
+                size={64} 
+                color={colors.cream}
+              />
+            </LinearGradient>
+            <Text style={[styles.tryAgainTitle, { color: textColor }]}>
+              Try Again
+            </Text>
+            <Text style={[styles.tryAgainText, { color: secondaryTextColor }]}>
+              You&apos;ve missed 10 questions. Don&apos;t worry - practice makes perfect! The questions will be shuffled for a fresh start.
+            </Text>
+            <Text style={[styles.tryAgainScore, { color: colors.softPlum }]}>
+              Current Score: {score} / {currentQuestionIndex + 1}
+            </Text>
+            <Pressable 
+              style={({ pressed }) => [
+                styles.tryAgainButton,
+                { opacity: pressed ? 0.85 : 1 }
+              ]}
+              onPress={handleTryAgainAfterFail}
+            >
+              <LinearGradient
+                colors={gradients.plumRose}
+                style={styles.tryAgainButtonGradient}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+              >
+                <IconSymbol 
+                  ios_icon_name="arrow.clockwise" 
+                  android_material_icon_name="refresh" 
+                  size={24} 
+                  color={colors.cream}
+                />
+                <Text style={styles.tryAgainButtonText}>Start Fresh</Text>
               </LinearGradient>
             </Pressable>
           </View>
@@ -558,6 +630,57 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   resumeButtonText: {
+    color: colors.cream,
+    fontSize: 19,
+    fontWeight: '700',
+  },
+  tryAgainModal: {
+    padding: 36,
+    alignItems: 'center',
+    width: '100%',
+    maxWidth: 400,
+  },
+  tryAgainIconContainer: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
+    borderWidth: 3,
+    borderColor: 'rgba(255, 255, 255, 0.5)',
+  },
+  tryAgainTitle: {
+    ...typography.heading1,
+    fontSize: 36,
+    marginBottom: 12,
+  },
+  tryAgainText: {
+    ...typography.body,
+    textAlign: 'center',
+    marginBottom: 20,
+    lineHeight: 26,
+  },
+  tryAgainScore: {
+    ...typography.heading3,
+    fontSize: 19,
+    marginBottom: 28,
+  },
+  tryAgainButton: {
+    width: '100%',
+    borderRadius: 24,
+    overflow: 'hidden',
+    ...shadows.glow,
+  },
+  tryAgainButtonGradient: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 18,
+    paddingHorizontal: 32,
+    gap: 10,
+  },
+  tryAgainButtonText: {
     color: colors.cream,
     fontSize: 19,
     fontWeight: '700',

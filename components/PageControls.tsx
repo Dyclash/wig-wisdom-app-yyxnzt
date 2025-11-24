@@ -2,22 +2,23 @@
 import React from 'react';
 import { View, Pressable, StyleSheet } from 'react-native';
 import { useTheme } from '@react-navigation/native';
-import { useRouter } from 'expo-router';
 import { IconSymbol } from '@/components/IconSymbol';
 import { colors, glassStyles, shadows } from '@/styles/commonStyles';
 
 interface PageControlsProps {
   onPause?: () => void;
+  onGoHome?: () => void;
   showPause?: boolean;
 }
 
-export function PageControls({ onPause, showPause = true }: PageControlsProps) {
+export function PageControls({ onPause, onGoHome, showPause = true }: PageControlsProps) {
   const theme = useTheme();
-  const router = useRouter();
 
   const handleGoHome = () => {
-    console.log('Navigating to home...');
-    router.push('/(tabs)/(home)/');
+    console.log('Home button pressed');
+    if (onGoHome) {
+      onGoHome();
+    }
   };
 
   const handlePause = () => {
