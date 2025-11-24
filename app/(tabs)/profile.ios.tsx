@@ -1,6 +1,6 @@
 
 import React, { useState } from "react";
-import { View, Text, StyleSheet, ScrollView, Pressable, Modal, Linking } from "react-native";
+import { View, Text, StyleSheet, ScrollView, Pressable, Modal, Linking, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { IconSymbol } from "@/components/IconSymbol.ios";
 import { useTheme } from "@react-navigation/native";
@@ -14,7 +14,26 @@ export default function ProfileScreen() {
   const router = useRouter();
   const [showPauseInfo, setShowPauseInfo] = useState(false);
 
-  const [userStats] = useState({
+  const initialStats = {
+    name: "Wig Enthusiast",
+    totalQuizzes: 0,
+    bestScore: 0,
+    averageScore: 0,
+    currentRank: "Wig Rookie",
+    totalCorrect: 0,
+    totalQuestions: 0,
+    achievements: [
+      { id: 1, name: "First Quiz", emoji: "🎯", unlocked: false },
+      { id: 2, name: "Perfect Score", emoji: "💯", unlocked: false },
+      { id: 3, name: "10 Quizzes", emoji: "🔟", unlocked: false },
+      { id: 4, name: "Lace Master", emoji: "👑", unlocked: false },
+      { id: 5, name: "Speed Demon", emoji: "⚡", unlocked: false },
+      { id: 6, name: "Dedicated Learner", emoji: "📚", unlocked: false },
+    ],
+    recentScores: [],
+  };
+
+  const [userStats, setUserStats] = useState({
     name: "Wig Enthusiast",
     totalQuizzes: 12,
     bestScore: 38,
@@ -37,7 +56,9 @@ export default function ProfileScreen() {
     ],
   });
 
-  const overallPercentage = Math.round((userStats.totalCorrect / userStats.totalQuestions) * 100);
+  const overallPercentage = userStats.totalQuestions > 0 
+    ? Math.round((userStats.totalCorrect / userStats.totalQuestions) * 100) 
+    : 0;
 
   const handleStartQuiz = () => {
     console.log('Starting quiz from profile...');
@@ -47,6 +68,34 @@ export default function ProfileScreen() {
   const handlePause = () => {
     console.log('Pause info shown on profile page');
     setShowPauseInfo(true);
+  };
+
+  const handleResetStats = () => {
+    console.log('Reset stats button pressed');
+    Alert.alert(
+      "Reset Statistics",
+      "Are you sure you want to reset all your quiz statistics and achievements? This action cannot be undone.",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+          onPress: () => console.log('Reset cancelled')
+        },
+        {
+          text: "Reset",
+          style: "destructive",
+          onPress: () => {
+            console.log('Resetting all statistics and achievements...');
+            setUserStats(initialStats);
+            Alert.alert(
+              "Reset Complete",
+              "Your quiz statistics and achievements have been reset successfully!",
+              [{ text: "OK", onPress: () => console.log('Reset confirmed') }]
+            );
+          }
+        }
+      ]
+    );
   };
 
   const handleContactPress = (type: string, value: string) => {
@@ -253,37 +302,61 @@ export default function ProfileScreen() {
         </View>
 
         {/* Recent Scores */}
-        <View style={[styles.recentCard, { backgroundColor: theme.dark ? '#2a2a2a' : colors.card }]}>
-          <Text style={[styles.sectionTitle, { color: theme.dark ? '#ffffff' : colors.text }]}>
-            Recent Quizzes
+        {userStats.recentScores.length > 0 && (
+          <View style={[styles.recentCard, { backgroundColor: theme.dark ? '#2a2a2a' : colors.card }]}>
+            <Text style={[styles.sectionTitle, { color: theme.dark ? '#ffffff' : colors.text }]}>
+              Recent Quizzes
+            </Text>
+            {userStats.recentScores.map((quiz, index) => (
+              <View 
+                key={index}
+                style={[
+                  styles.recentItem,
+                  { borderBottomColor: theme.dark ? '#3a3a3a' : colors.highlight }
+                ]}
+              >
+                <View style={styles.recentLeft}>
+                  <Text style={[styles.recentDate, { color: theme.dark ? '#cccccc' : colors.textSecondary }]}>
+                    {quiz.date}
+                  </Text>
+                  <Text style={[styles.recentRank, { color: theme.dark ? colors.secondary : colors.primary }]}>
+                    {quiz.rank}
+                  </Text>
+                </View>
+                <View style={styles.recentRight}>
+                  <Text style={[styles.recentScore, { color: theme.dark ? '#ffffff' : colors.text }]}>
+                    {quiz.score}/{quiz.total}
+                  </Text>
+                  <Text style={[styles.recentPercentage, { color: theme.dark ? '#999999' : colors.textSecondary }]}>
+                    {Math.round((quiz.score / quiz.total) * 100)}%
+                  </Text>
+                </View>
+              </View>
+            ))}
+          </View>
+        )}
+
+        {/* Reset Statistics Button */}
+        <Pressable 
+          style={({ pressed }) => [
+            styles.resetButton,
+            { 
+              backgroundColor: theme.dark ? '#3a3a3a' : colors.highlight,
+              opacity: pressed ? 0.7 : 1 
+            }
+          ]}
+          onPress={handleResetStats}
+        >
+          <IconSymbol 
+            ios_icon_name="arrow.counterclockwise.circle.fill" 
+            android_material_icon_name="restore" 
+            size={24} 
+            color={theme.dark ? '#ff6b6b' : '#d32f2f'}
+          />
+          <Text style={[styles.resetButtonText, { color: theme.dark ? '#ff6b6b' : '#d32f2f' }]}>
+            Reset Quiz Statistics & Achievements
           </Text>
-          {userStats.recentScores.map((quiz, index) => (
-            <View 
-              key={index}
-              style={[
-                styles.recentItem,
-                { borderBottomColor: theme.dark ? '#3a3a3a' : colors.highlight }
-              ]}
-            >
-              <View style={styles.recentLeft}>
-                <Text style={[styles.recentDate, { color: theme.dark ? '#cccccc' : colors.textSecondary }]}>
-                  {quiz.date}
-                </Text>
-                <Text style={[styles.recentRank, { color: theme.dark ? colors.secondary : colors.primary }]}>
-                  {quiz.rank}
-                </Text>
-              </View>
-              <View style={styles.recentRight}>
-                <Text style={[styles.recentScore, { color: theme.dark ? '#ffffff' : colors.text }]}>
-                  {quiz.score}/{quiz.total}
-                </Text>
-                <Text style={[styles.recentPercentage, { color: theme.dark ? '#999999' : colors.textSecondary }]}>
-                  {Math.round((quiz.score / quiz.total) * 100)}%
-                </Text>
-              </View>
-            </View>
-          ))}
-        </View>
+        </Pressable>
 
         {/* Contact Us Section */}
         <View style={[styles.contactCard, { backgroundColor: theme.dark ? '#2a2a2a' : colors.card }]}>
@@ -685,6 +758,21 @@ const styles = StyleSheet.create({
   },
   recentPercentage: {
     fontSize: 12,
+  },
+  resetButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 16,
+    borderRadius: 12,
+    marginBottom: 16,
+    gap: 10,
+    borderWidth: 2,
+    borderColor: 'rgba(211, 47, 47, 0.3)',
+  },
+  resetButtonText: {
+    fontSize: 16,
+    fontWeight: '700',
   },
   contactCard: {
     borderRadius: 16,
