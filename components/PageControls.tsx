@@ -4,7 +4,7 @@ import { View, Pressable, StyleSheet } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
 import { IconSymbol } from '@/components/IconSymbol';
-import { colors } from '@/styles/commonStyles';
+import { colors, glassStyles, shadows } from '@/styles/commonStyles';
 
 interface PageControlsProps {
   onPause?: () => void;
@@ -32,8 +32,8 @@ export function PageControls({ onPause, showPause = true }: PageControlsProps) {
       <Pressable
         style={({ pressed }) => [
           styles.button,
+          glassStyles.glassButton,
           {
-            backgroundColor: theme.dark ? '#2a2a2a' : colors.card,
             opacity: pressed ? 0.7 : 1,
           },
         ]}
@@ -42,8 +42,8 @@ export function PageControls({ onPause, showPause = true }: PageControlsProps) {
         <IconSymbol
           ios_icon_name="house.fill"
           android_material_icon_name="home"
-          size={24}
-          color={theme.dark ? colors.secondary : colors.primary}
+          size={22}
+          color={colors.softPlum}
         />
       </Pressable>
 
@@ -51,8 +51,8 @@ export function PageControls({ onPause, showPause = true }: PageControlsProps) {
         <Pressable
           style={({ pressed }) => [
             styles.button,
+            glassStyles.glassButton,
             {
-              backgroundColor: theme.dark ? '#2a2a2a' : colors.card,
               opacity: pressed ? 0.7 : 1,
             },
           ]}
@@ -61,8 +61,8 @@ export function PageControls({ onPause, showPause = true }: PageControlsProps) {
           <IconSymbol
             ios_icon_name="pause.fill"
             android_material_icon_name="pause"
-            size={24}
-            color={theme.dark ? colors.accent : colors.accent}
+            size={22}
+            color={colors.roseGold}
           />
         </Pressable>
       )}
@@ -80,12 +80,10 @@ const styles = StyleSheet.create({
     zIndex: 1000,
   },
   button: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
+    width: 48,
+    height: 48,
+    borderRadius: 24,
     justifyContent: 'center',
     alignItems: 'center',
-    boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.15)',
-    elevation: 4,
   },
 });

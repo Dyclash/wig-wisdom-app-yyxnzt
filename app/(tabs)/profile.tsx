@@ -5,7 +5,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { IconSymbol } from "@/components/IconSymbol";
 import { useTheme } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
-import { colors } from "@/styles/commonStyles";
+import { colors, glassStyles, gradients, shadows, typography } from "@/styles/commonStyles";
 import { useRouter } from "expo-router";
 import { PageControls } from "@/components/PageControls";
 
@@ -14,7 +14,10 @@ export default function ProfileScreen() {
   const router = useRouter();
   const [showPauseInfo, setShowPauseInfo] = useState(false);
 
-  // Mock data - in a real app, this would come from state management or backend
+  const bgColor = theme.dark ? colors.backgroundDark : colors.background;
+  const textColor = theme.dark ? colors.textLight : colors.text;
+  const secondaryTextColor = theme.dark ? '#D4B5D4' : colors.textSecondary;
+
   const [userStats] = useState({
     name: "Wig Enthusiast",
     totalQuizzes: 12,
@@ -51,7 +54,16 @@ export default function ProfileScreen() {
   };
 
   return (
-    <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.dark ? '#1a1a1a' : theme.colors.background }]} edges={['top']}>
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: bgColor }]} edges={['top']}>
+      <LinearGradient
+        colors={theme.dark 
+          ? ['rgba(42, 26, 46, 0.9)', 'rgba(154, 78, 136, 0.2)', 'rgba(42, 26, 46, 0.9)']
+          : ['rgba(255, 243, 236, 1)', 'rgba(247, 198, 208, 0.3)', 'rgba(200, 162, 200, 0.2)']}
+        style={styles.backgroundGradient}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+      />
+      
       <PageControls onPause={handlePause} showPause={true} />
       
       <ScrollView
@@ -60,11 +72,12 @@ export default function ProfileScreen() {
           styles.contentContainer,
           Platform.OS !== 'ios' && styles.contentContainerWithTabBar
         ]}
+        showsVerticalScrollIndicator={false}
       >
         {/* Profile Header */}
-        <View style={[styles.profileHeader, { backgroundColor: theme.dark ? '#2a2a2a' : colors.card }]}>
+        <View style={[styles.profileHeader, glassStyles.glassPinkCard]}>
           <LinearGradient
-            colors={theme.dark ? ['#7b1fa2', '#9c27b0'] : [colors.primary, colors.secondary]}
+            colors={gradients.plumRose}
             style={styles.avatarContainer}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
@@ -72,30 +85,30 @@ export default function ProfileScreen() {
             <IconSymbol 
               ios_icon_name="sparkles" 
               android_material_icon_name="auto-awesome" 
-              size={48} 
-              color={colors.accent}
+              size={52} 
+              color={colors.cream}
             />
           </LinearGradient>
-          <Text style={[styles.name, { color: theme.dark ? '#ffffff' : colors.text }]}>
+          <Text style={[styles.name, { color: textColor }]}>
             {userStats.name}
           </Text>
-          <View style={[styles.rankBadge, { backgroundColor: theme.dark ? '#3a3a3a' : colors.highlight }]}>
-            <Text style={[styles.rankText, { color: theme.dark ? colors.secondary : colors.primary }]}>
+          <View style={[styles.rankBadge, glassStyles.glassButton]}>
+            <Text style={[styles.rankText, { color: colors.softPlum }]}>
               {userStats.currentRank}
             </Text>
           </View>
         </View>
 
         {/* Stats Overview */}
-        <View style={[styles.statsCard, { backgroundColor: theme.dark ? '#2a2a2a' : colors.card }]}>
-          <Text style={[styles.sectionTitle, { color: theme.dark ? '#ffffff' : colors.text }]}>
+        <View style={[styles.statsCard, glassStyles.glassLavenderCard]}>
+          <Text style={[styles.sectionTitle, { color: textColor }]}>
             Quiz Statistics
           </Text>
           
           <View style={styles.statsGrid}>
             <View style={styles.statItem}>
               <LinearGradient
-                colors={theme.dark ? ['#4a148c', '#7b1fa2'] : [colors.primary, colors.secondary]}
+                colors={gradients.plumRose}
                 style={styles.statIconContainer}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
@@ -103,43 +116,43 @@ export default function ProfileScreen() {
                 <IconSymbol 
                   ios_icon_name="list.bullet.clipboard" 
                   android_material_icon_name="assignment" 
-                  size={24} 
-                  color="#FFFFFF"
+                  size={26} 
+                  color={colors.cream}
                 />
               </LinearGradient>
-              <Text style={[styles.statValue, { color: theme.dark ? '#ffffff' : colors.text }]}>
+              <Text style={[styles.statValue, { color: textColor }]}>
                 {userStats.totalQuizzes}
               </Text>
-              <Text style={[styles.statLabel, { color: theme.dark ? '#cccccc' : colors.textSecondary }]}>
+              <Text style={[styles.statLabel, { color: secondaryTextColor }]}>
                 Total Quizzes
               </Text>
             </View>
 
             <View style={styles.statItem}>
               <LinearGradient
-                colors={theme.dark ? ['#ffd700', '#ffed4e'] : [colors.accent, '#FFE55C']}
+                colors={gradients.roseGoldShimmer}
                 style={styles.statIconContainer}
                 start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 1 }}
+                end={{ x: 1, y: 0 }}
               >
                 <IconSymbol 
                   ios_icon_name="star.fill" 
                   android_material_icon_name="star" 
-                  size={24} 
-                  color={theme.dark ? '#7b1fa2' : colors.primary}
+                  size={26} 
+                  color={colors.cream}
                 />
               </LinearGradient>
-              <Text style={[styles.statValue, { color: theme.dark ? '#ffffff' : colors.text }]}>
+              <Text style={[styles.statValue, { color: textColor }]}>
                 {userStats.bestScore}/48
               </Text>
-              <Text style={[styles.statLabel, { color: theme.dark ? '#cccccc' : colors.textSecondary }]}>
+              <Text style={[styles.statLabel, { color: secondaryTextColor }]}>
                 Best Score
               </Text>
             </View>
 
             <View style={styles.statItem}>
               <LinearGradient
-                colors={theme.dark ? ['#9c27b0', '#ba68c8'] : [colors.secondary, '#E1BEE7']}
+                colors={gradients.lavenderPink}
                 style={styles.statIconContainer}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
@@ -147,14 +160,14 @@ export default function ProfileScreen() {
                 <IconSymbol 
                   ios_icon_name="chart.bar.fill" 
                   android_material_icon_name="bar-chart" 
-                  size={24} 
-                  color="#FFFFFF"
+                  size={26} 
+                  color={colors.cream}
                 />
               </LinearGradient>
-              <Text style={[styles.statValue, { color: theme.dark ? '#ffffff' : colors.text }]}>
+              <Text style={[styles.statValue, { color: textColor }]}>
                 {userStats.averageScore}/48
               </Text>
-              <Text style={[styles.statLabel, { color: theme.dark ? '#cccccc' : colors.textSecondary }]}>
+              <Text style={[styles.statLabel, { color: secondaryTextColor }]}>
                 Average Score
               </Text>
             </View>
@@ -163,30 +176,30 @@ export default function ProfileScreen() {
           {/* Overall Progress */}
           <View style={styles.progressSection}>
             <View style={styles.progressHeader}>
-              <Text style={[styles.progressLabel, { color: theme.dark ? '#cccccc' : colors.textSecondary }]}>
+              <Text style={[styles.progressLabel, { color: secondaryTextColor }]}>
                 Overall Accuracy
               </Text>
-              <Text style={[styles.progressPercentage, { color: theme.dark ? colors.secondary : colors.primary }]}>
+              <Text style={[styles.progressPercentage, { color: colors.softPlum }]}>
                 {overallPercentage}%
               </Text>
             </View>
-            <View style={[styles.progressBarContainer, { backgroundColor: theme.dark ? '#3a3a3a' : colors.highlight }]}>
+            <View style={styles.progressBarContainer}>
               <LinearGradient
-                colors={theme.dark ? ['#7b1fa2', '#9c27b0'] : [colors.primary, colors.secondary]}
+                colors={gradients.plumRose}
                 style={[styles.progressBar, { width: `${overallPercentage}%` }]}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 0 }}
               />
             </View>
-            <Text style={[styles.progressText, { color: theme.dark ? '#999999' : colors.textSecondary }]}>
+            <Text style={[styles.progressText, { color: secondaryTextColor }]}>
               {userStats.totalCorrect} correct out of {userStats.totalQuestions} questions
             </Text>
           </View>
         </View>
 
         {/* Achievements */}
-        <View style={[styles.achievementsCard, { backgroundColor: theme.dark ? '#2a2a2a' : colors.card }]}>
-          <Text style={[styles.sectionTitle, { color: theme.dark ? '#ffffff' : colors.text }]}>
+        <View style={[styles.achievementsCard, glassStyles.glassCard]}>
+          <Text style={[styles.sectionTitle, { color: textColor }]}>
             Achievements
           </Text>
           <View style={styles.achievementsGrid}>
@@ -195,18 +208,14 @@ export default function ProfileScreen() {
                 key={index}
                 style={[
                   styles.achievementItem,
-                  { 
-                    backgroundColor: achievement.unlocked 
-                      ? (theme.dark ? '#3a3a3a' : colors.highlight)
-                      : (theme.dark ? '#252525' : '#F0F0F0'),
-                    opacity: achievement.unlocked ? 1 : 0.5
-                  }
+                  glassStyles.glassButton,
+                  { opacity: achievement.unlocked ? 1 : 0.4 }
                 ]}
               >
                 <Text style={styles.achievementEmoji}>{achievement.emoji}</Text>
                 <Text style={[
                   styles.achievementName, 
-                  { color: theme.dark ? '#cccccc' : colors.textSecondary }
+                  { color: textColor }
                 ]}>
                   {achievement.name}
                 </Text>
@@ -215,8 +224,8 @@ export default function ProfileScreen() {
                     <IconSymbol 
                       ios_icon_name="checkmark.circle.fill" 
                       android_material_icon_name="check-circle" 
-                      size={16} 
-                      color="#4CAF50"
+                      size={18} 
+                      color={colors.success}
                     />
                   </View>
                 )}
@@ -226,8 +235,8 @@ export default function ProfileScreen() {
         </View>
 
         {/* Recent Scores */}
-        <View style={[styles.recentCard, { backgroundColor: theme.dark ? '#2a2a2a' : colors.card }]}>
-          <Text style={[styles.sectionTitle, { color: theme.dark ? '#ffffff' : colors.text }]}>
+        <View style={[styles.recentCard, glassStyles.glassPinkCard]}>
+          <Text style={[styles.sectionTitle, { color: textColor }]}>
             Recent Quizzes
           </Text>
           {userStats.recentScores.map((quiz, index) => (
@@ -235,22 +244,22 @@ export default function ProfileScreen() {
               key={index}
               style={[
                 styles.recentItem,
-                { borderBottomColor: theme.dark ? '#3a3a3a' : colors.highlight }
+                { borderBottomColor: 'rgba(200, 162, 200, 0.3)' }
               ]}
             >
               <View style={styles.recentLeft}>
-                <Text style={[styles.recentDate, { color: theme.dark ? '#cccccc' : colors.textSecondary }]}>
+                <Text style={[styles.recentDate, { color: secondaryTextColor }]}>
                   {quiz.date}
                 </Text>
-                <Text style={[styles.recentRank, { color: theme.dark ? colors.secondary : colors.primary }]}>
+                <Text style={[styles.recentRank, { color: colors.softPlum }]}>
                   {quiz.rank}
                 </Text>
               </View>
               <View style={styles.recentRight}>
-                <Text style={[styles.recentScore, { color: theme.dark ? '#ffffff' : colors.text }]}>
+                <Text style={[styles.recentScore, { color: textColor }]}>
                   {quiz.score}/{quiz.total}
                 </Text>
-                <Text style={[styles.recentPercentage, { color: theme.dark ? '#999999' : colors.textSecondary }]}>
+                <Text style={[styles.recentPercentage, { color: secondaryTextColor }]}>
                   {Math.round((quiz.score / quiz.total) * 100)}%
                 </Text>
               </View>
@@ -262,12 +271,12 @@ export default function ProfileScreen() {
         <Pressable 
           style={({ pressed }) => [
             styles.quizButton,
-            { opacity: pressed ? 0.8 : 1 }
+            { opacity: pressed ? 0.85 : 1 }
           ]}
           onPress={handleStartQuiz}
         >
           <LinearGradient
-            colors={theme.dark ? ['#7b1fa2', '#9c27b0'] : [colors.primary, colors.secondary]}
+            colors={gradients.plumRose}
             style={styles.buttonGradient}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 0 }}
@@ -276,7 +285,7 @@ export default function ProfileScreen() {
               ios_icon_name="play.fill" 
               android_material_icon_name="play-arrow" 
               size={24} 
-              color="#FFFFFF"
+              color={colors.cream}
             />
             <Text style={styles.buttonText}>Take Another Quiz</Text>
           </LinearGradient>
@@ -291,28 +300,35 @@ export default function ProfileScreen() {
         onRequestClose={() => setShowPauseInfo(false)}
       >
         <View style={styles.modalOverlay}>
-          <View style={[styles.infoModal, { backgroundColor: theme.dark ? '#2a2a2a' : colors.card }]}>
-            <IconSymbol 
-              ios_icon_name="info.circle.fill" 
-              android_material_icon_name="info" 
-              size={64} 
-              color={theme.dark ? colors.secondary : colors.primary}
-            />
-            <Text style={[styles.infoTitle, { color: theme.dark ? '#ffffff' : colors.text }]}>
+          <View style={[styles.infoModal, glassStyles.glassCard]}>
+            <LinearGradient
+              colors={gradients.lavenderPink}
+              style={styles.infoIconContainer}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+            >
+              <IconSymbol 
+                ios_icon_name="info.circle.fill" 
+                android_material_icon_name="info" 
+                size={64} 
+                color={colors.cream}
+              />
+            </LinearGradient>
+            <Text style={[styles.infoTitle, { color: textColor }]}>
               Profile Page
             </Text>
-            <Text style={[styles.infoText, { color: theme.dark ? '#cccccc' : colors.textSecondary }]}>
+            <Text style={[styles.infoText, { color: secondaryTextColor }]}>
               View your quiz statistics, achievements, and recent scores. Start a new quiz to improve your ranking!
             </Text>
             <Pressable 
               style={({ pressed }) => [
                 styles.infoButton,
-                { opacity: pressed ? 0.8 : 1 }
+                { opacity: pressed ? 0.85 : 1 }
               ]}
               onPress={() => setShowPauseInfo(false)}
             >
               <LinearGradient
-                colors={theme.dark ? ['#7b1fa2', '#9c27b0'] : [colors.primary, colors.secondary]}
+                colors={gradients.plumRose}
                 style={styles.infoButtonGradient}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 0 }}
@@ -331,6 +347,13 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
   },
+  backgroundGradient: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+  },
   container: {
     flex: 1,
   },
@@ -339,77 +362,76 @@ const styles = StyleSheet.create({
     paddingTop: 100,
   },
   contentContainerWithTabBar: {
-    paddingBottom: 100,
+    paddingBottom: 120,
   },
   profileHeader: {
     alignItems: 'center',
-    borderRadius: 16,
-    padding: 24,
-    marginBottom: 16,
-    boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.1)',
-    elevation: 3,
+    padding: 28,
+    marginBottom: 20,
   },
   avatarContainer: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
+    width: 110,
+    height: 110,
+    borderRadius: 55,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 16,
-    boxShadow: '0px 4px 12px rgba(128, 0, 128, 0.3)',
-    elevation: 6,
+    marginBottom: 18,
+    borderWidth: 3,
+    borderColor: 'rgba(255, 255, 255, 0.6)',
+    ...shadows.glow,
   },
   name: {
-    fontSize: 24,
-    fontWeight: '800',
-    marginBottom: 8,
+    ...typography.heading1,
+    fontSize: 28,
+    marginBottom: 12,
   },
   rankBadge: {
-    paddingHorizontal: 16,
-    paddingVertical: 6,
+    paddingHorizontal: 20,
+    paddingVertical: 8,
     borderRadius: 20,
   },
   rankText: {
-    fontSize: 14,
+    ...typography.body,
+    fontSize: 15,
     fontWeight: '700',
   },
   statsCard: {
-    borderRadius: 16,
-    padding: 20,
-    marginBottom: 16,
-    boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.1)',
-    elevation: 3,
+    padding: 24,
+    marginBottom: 20,
   },
   sectionTitle: {
-    fontSize: 20,
-    fontWeight: '700',
-    marginBottom: 16,
+    ...typography.heading2,
+    fontSize: 22,
+    marginBottom: 20,
+    textAlign: 'center',
   },
   statsGrid: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 24,
+    marginBottom: 28,
   },
   statItem: {
     flex: 1,
     alignItems: 'center',
   },
   statIconContainer: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 8,
-    boxShadow: '0px 2px 6px rgba(0, 0, 0, 0.15)',
-    elevation: 4,
+    marginBottom: 10,
+    borderWidth: 2,
+    borderColor: 'rgba(255, 255, 255, 0.5)',
+    ...shadows.soft,
   },
   statValue: {
-    fontSize: 20,
-    fontWeight: '800',
+    ...typography.heading3,
+    fontSize: 22,
     marginBottom: 4,
   },
   statLabel: {
+    ...typography.caption,
     fontSize: 12,
     textAlign: 'center',
   },
@@ -420,168 +442,172 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 8,
+    marginBottom: 10,
   },
   progressLabel: {
-    fontSize: 14,
+    ...typography.body,
+    fontSize: 15,
     fontWeight: '600',
   },
   progressPercentage: {
-    fontSize: 16,
-    fontWeight: '800',
+    ...typography.heading3,
+    fontSize: 18,
   },
   progressBarContainer: {
-    height: 8,
-    borderRadius: 4,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
     overflow: 'hidden',
-    marginBottom: 8,
+    marginBottom: 10,
   },
   progressBar: {
     height: '100%',
-    borderRadius: 4,
+    borderRadius: 5,
   },
   progressText: {
-    fontSize: 12,
+    ...typography.caption,
+    fontSize: 13,
     textAlign: 'center',
   },
   achievementsCard: {
-    borderRadius: 16,
-    padding: 20,
-    marginBottom: 16,
-    boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.1)',
-    elevation: 3,
+    padding: 24,
+    marginBottom: 20,
   },
   achievementsGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 12,
+    gap: 14,
   },
   achievementItem: {
     width: '30%',
     aspectRatio: 1,
-    borderRadius: 12,
+    borderRadius: 20,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 8,
+    padding: 10,
     position: 'relative',
   },
   achievementEmoji: {
-    fontSize: 32,
-    marginBottom: 4,
+    fontSize: 36,
+    marginBottom: 6,
   },
   achievementName: {
-    fontSize: 10,
+    ...typography.caption,
+    fontSize: 11,
     fontWeight: '600',
     textAlign: 'center',
   },
   checkmarkContainer: {
     position: 'absolute',
-    top: 4,
-    right: 4,
+    top: 6,
+    right: 6,
   },
   recentCard: {
-    borderRadius: 16,
-    padding: 20,
-    marginBottom: 16,
-    boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.1)',
-    elevation: 3,
+    padding: 24,
+    marginBottom: 20,
   },
   recentItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 12,
+    paddingVertical: 14,
     borderBottomWidth: 1,
   },
   recentLeft: {
     flex: 1,
   },
   recentDate: {
+    ...typography.caption,
     fontSize: 14,
-    marginBottom: 4,
+    marginBottom: 6,
   },
   recentRank: {
-    fontSize: 16,
-    fontWeight: '700',
+    ...typography.heading3,
+    fontSize: 18,
   },
   recentRight: {
     alignItems: 'flex-end',
   },
   recentScore: {
-    fontSize: 20,
-    fontWeight: '800',
+    ...typography.heading2,
+    fontSize: 22,
     marginBottom: 2,
   },
   recentPercentage: {
-    fontSize: 12,
+    ...typography.caption,
+    fontSize: 13,
   },
   quizButton: {
     width: '100%',
-    borderRadius: 16,
+    borderRadius: 24,
     overflow: 'hidden',
-    boxShadow: '0px 4px 12px rgba(128, 0, 128, 0.3)',
-    elevation: 6,
+    ...shadows.glow,
     marginBottom: 20,
   },
   buttonGradient: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 16,
+    paddingVertical: 18,
     paddingHorizontal: 32,
+    gap: 10,
   },
   buttonText: {
-    color: '#FFFFFF',
-    fontSize: 18,
+    color: colors.cream,
+    fontSize: 19,
     fontWeight: '700',
-    marginLeft: 8,
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    backgroundColor: 'rgba(74, 44, 74, 0.85)',
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 24,
   },
   infoModal: {
-    borderRadius: 20,
-    padding: 32,
+    padding: 36,
     alignItems: 'center',
     width: '100%',
     maxWidth: 400,
-    boxShadow: '0px 4px 16px rgba(0, 0, 0, 0.3)',
-    elevation: 8,
+  },
+  infoIconContainer: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
+    borderWidth: 3,
+    borderColor: 'rgba(255, 255, 255, 0.5)',
   },
   infoTitle: {
-    fontSize: 28,
-    fontWeight: '800',
-    marginTop: 16,
+    ...typography.heading1,
+    fontSize: 32,
     marginBottom: 12,
     textAlign: 'center',
   },
   infoText: {
-    fontSize: 16,
+    ...typography.body,
     textAlign: 'center',
-    marginBottom: 24,
-    lineHeight: 24,
+    marginBottom: 28,
+    lineHeight: 26,
   },
   infoButton: {
     width: '100%',
-    borderRadius: 16,
+    borderRadius: 24,
     overflow: 'hidden',
-    boxShadow: '0px 4px 12px rgba(128, 0, 128, 0.3)',
-    elevation: 6,
+    ...shadows.glow,
   },
   infoButtonGradient: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 16,
+    paddingVertical: 18,
     paddingHorizontal: 32,
   },
   infoButtonText: {
-    color: '#FFFFFF',
-    fontSize: 18,
+    color: colors.cream,
+    fontSize: 19,
     fontWeight: '700',
   },
 });

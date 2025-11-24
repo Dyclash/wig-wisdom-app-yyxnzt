@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, Pressable, Modal } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
-import { colors } from '@/styles/commonStyles';
+import { colors, glassStyles, gradients, shadows, typography } from '@/styles/commonStyles';
 import { IconSymbol } from '@/components/IconSymbol';
 import { LinearGradient } from 'expo-linear-gradient';
 import { RankType } from '@/types/quiz';
@@ -16,32 +16,39 @@ export default function ResultsScreen() {
   const [showPauseInfo, setShowPauseInfo] = useState(false);
   
   const score = parseInt(params.score as string) || 0;
-  const total = parseInt(params.total as string) || 20;
+  const total = parseInt(params.total as string) || 48;
   const percentage = Math.round((score / total) * 100);
 
-  const getRank = (): { rank: RankType; emoji: string; message: string } => {
-    if (score <= 5) {
+  const bgColor = theme.dark ? colors.backgroundDark : colors.background;
+  const textColor = theme.dark ? colors.textLight : colors.text;
+  const secondaryTextColor = theme.dark ? '#D4B5D4' : colors.textSecondary;
+
+  const getRank = (): { rank: RankType; emoji: string; message: string; gradient: string[] } => {
+    if (score <= 16) {
       return {
         rank: 'Wig Rookie',
         emoji: '🌱',
-        message: 'You\'re just getting started! Keep learning about wigs and you\'ll be a pro in no time.'
+        message: 'You\'re just beginning your wig journey! Keep learning and you\'ll blossom into an expert.',
+        gradient: gradients.lavenderPink
       };
-    } else if (score <= 12) {
+    } else if (score <= 32) {
       return {
         rank: 'Wig Enthusiast',
         emoji: '💜',
-        message: 'Great job! You have a solid understanding of wig care and styling. Keep it up!'
+        message: 'Wonderful! You have a solid grasp of wig care and styling. You\'re well on your way!',
+        gradient: gradients.plumRose
       };
     } else {
       return {
         rank: 'Lace Master',
         emoji: '👑',
-        message: 'Outstanding! You\'re a true wig expert. Your knowledge is impressive!'
+        message: 'Absolutely stunning! You\'re a true wig connoisseur. Your expertise is exceptional!',
+        gradient: gradients.roseGoldShimmer
       };
     }
   };
 
-  const { rank, emoji, message } = getRank();
+  const { rank, emoji, message, gradient } = getRank();
 
   const handleTryAgain = () => {
     console.log('Restarting quiz...');
@@ -59,23 +66,36 @@ export default function ResultsScreen() {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.dark ? '#1a1a1a' : colors.background }]}>
+    <View style={[styles.container, { backgroundColor: bgColor }]}>
+      <LinearGradient
+        colors={theme.dark 
+          ? ['rgba(42, 26, 46, 0.9)', 'rgba(154, 78, 136, 0.2)', 'rgba(42, 26, 46, 0.9)']
+          : ['rgba(255, 243, 236, 1)', 'rgba(247, 198, 208, 0.3)', 'rgba(200, 162, 200, 0.2)']}
+        style={styles.backgroundGradient}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+      />
+      
       <PageControls onPause={handlePause} showPause={true} />
       
       <ScrollView 
         style={styles.scrollView}
         contentContainerStyle={styles.contentContainer}
+        showsVerticalScrollIndicator={false}
       >
         <View style={styles.header}>
           <Text style={styles.emoji}>{emoji}</Text>
-          <Text style={[styles.title, { color: theme.dark ? '#ffffff' : colors.text }]}>
+          <Text style={[styles.title, { color: textColor }]}>
             Quiz Complete!
+          </Text>
+          <Text style={[styles.subtitle, { color: secondaryTextColor }]}>
+            ✨ Beautiful work! ✨
           </Text>
         </View>
 
-        <View style={[styles.scoreCard, { backgroundColor: theme.dark ? '#2a2a2a' : colors.card }]}>
+        <View style={[styles.scoreCard, glassStyles.glassPinkCard]}>
           <LinearGradient
-            colors={theme.dark ? ['#7b1fa2', '#9c27b0'] : [colors.primary, colors.secondary]}
+            colors={gradient}
             style={styles.scoreCircle}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
@@ -84,56 +104,63 @@ export default function ResultsScreen() {
             <Text style={styles.scoreTotal}>/ {total}</Text>
           </LinearGradient>
           
-          <Text style={[styles.percentage, { color: theme.dark ? '#ffffff' : colors.text }]}>
+          <Text style={[styles.percentage, { color: textColor }]}>
             {percentage}% Correct
           </Text>
         </View>
 
-        <View style={[styles.rankCard, { backgroundColor: theme.dark ? '#2a2a2a' : colors.highlight }]}>
-          <View style={styles.rankBadge}>
+        <View style={[styles.rankCard, glassStyles.glassLavenderCard]}>
+          <View style={styles.rankBadgeContainer}>
             <LinearGradient
-              colors={theme.dark ? ['#ffd700', '#ffed4e'] : [colors.accent, '#FFE55C']}
-              style={styles.badgeGradient}
+              colors={gradient}
+              style={[styles.rankBadge, glassStyles.glowEffect]}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 1 }}
             >
               <IconSymbol 
-                ios_icon_name="star.fill" 
-                android_material_icon_name="star" 
-                size={32} 
-                color={theme.dark ? '#7b1fa2' : colors.primary}
+                ios_icon_name="crown.fill" 
+                android_material_icon_name="workspace-premium" 
+                size={40} 
+                color={colors.cream}
               />
             </LinearGradient>
           </View>
           
-          <Text style={[styles.rankTitle, { color: theme.dark ? '#ffffff' : colors.text }]}>
+          <Text style={[styles.rankTitle, { color: secondaryTextColor }]}>
             Your Rank
           </Text>
-          <Text style={[styles.rankName, { color: theme.dark ? colors.secondary : colors.primary }]}>
+          <Text style={[styles.rankName, { color: colors.softPlum }]}>
             {rank}
           </Text>
-          <Text style={[styles.rankMessage, { color: theme.dark ? '#cccccc' : colors.textSecondary }]}>
+          <Text style={[styles.rankMessage, { color: textColor }]}>
             {message}
           </Text>
         </View>
 
-        <View style={[styles.statsCard, { backgroundColor: theme.dark ? '#2a2a2a' : colors.card }]}>
-          <Text style={[styles.statsTitle, { color: theme.dark ? '#ffffff' : colors.text }]}>
+        <View style={[styles.statsCard, glassStyles.glassCard]}>
+          <Text style={[styles.statsTitle, { color: textColor }]}>
             Performance Breakdown
           </Text>
           
           <View style={styles.statRow}>
             <View style={styles.statItem}>
-              <IconSymbol 
-                ios_icon_name="checkmark.circle.fill" 
-                android_material_icon_name="check-circle" 
-                size={24} 
-                color="#4CAF50"
-              />
-              <Text style={[styles.statLabel, { color: theme.dark ? '#cccccc' : colors.textSecondary }]}>
+              <LinearGradient
+                colors={[colors.success, '#C8E6C9']}
+                style={styles.statIconContainer}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+              >
+                <IconSymbol 
+                  ios_icon_name="checkmark.circle.fill" 
+                  android_material_icon_name="check-circle" 
+                  size={28} 
+                  color={colors.textLight}
+                />
+              </LinearGradient>
+              <Text style={[styles.statLabel, { color: secondaryTextColor }]}>
                 Correct
               </Text>
-              <Text style={[styles.statValue, { color: theme.dark ? '#ffffff' : colors.text }]}>
+              <Text style={[styles.statValue, { color: textColor }]}>
                 {score}
               </Text>
             </View>
@@ -141,16 +168,23 @@ export default function ResultsScreen() {
             <View style={styles.statDivider} />
             
             <View style={styles.statItem}>
-              <IconSymbol 
-                ios_icon_name="xmark.circle.fill" 
-                android_material_icon_name="cancel" 
-                size={24} 
-                color="#F44336"
-              />
-              <Text style={[styles.statLabel, { color: theme.dark ? '#cccccc' : colors.textSecondary }]}>
+              <LinearGradient
+                colors={[colors.error, '#FFCDD2']}
+                style={styles.statIconContainer}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+              >
+                <IconSymbol 
+                  ios_icon_name="xmark.circle.fill" 
+                  android_material_icon_name="cancel" 
+                  size={28} 
+                  color={colors.textLight}
+                />
+              </LinearGradient>
+              <Text style={[styles.statLabel, { color: secondaryTextColor }]}>
                 Incorrect
               </Text>
-              <Text style={[styles.statValue, { color: theme.dark ? '#ffffff' : colors.text }]}>
+              <Text style={[styles.statValue, { color: textColor }]}>
                 {total - score}
               </Text>
             </View>
@@ -161,12 +195,12 @@ export default function ResultsScreen() {
           <Pressable 
             style={({ pressed }) => [
               styles.button,
-              { opacity: pressed ? 0.8 : 1 }
+              { opacity: pressed ? 0.85 : 1 }
             ]}
             onPress={handleTryAgain}
           >
             <LinearGradient
-              colors={theme.dark ? ['#7b1fa2', '#9c27b0'] : [colors.primary, colors.secondary]}
+              colors={gradients.plumRose}
               style={styles.buttonGradient}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 0 }}
@@ -175,7 +209,7 @@ export default function ResultsScreen() {
                 ios_icon_name="arrow.clockwise" 
                 android_material_icon_name="refresh" 
                 size={24} 
-                color="#FFFFFF"
+                color={colors.cream}
               />
               <Text style={styles.buttonText}>Try Again</Text>
             </LinearGradient>
@@ -184,10 +218,8 @@ export default function ResultsScreen() {
           <Pressable 
             style={({ pressed }) => [
               styles.secondaryButton,
-              { 
-                backgroundColor: theme.dark ? '#333333' : colors.highlight,
-                opacity: pressed ? 0.8 : 1 
-              }
+              glassStyles.glassButton,
+              { opacity: pressed ? 0.85 : 1 }
             ]}
             onPress={handleGoHome}
           >
@@ -195,16 +227,15 @@ export default function ResultsScreen() {
               ios_icon_name="house.fill" 
               android_material_icon_name="home" 
               size={24} 
-              color={theme.dark ? colors.secondary : colors.primary}
+              color={colors.softPlum}
             />
-            <Text style={[styles.secondaryButtonText, { color: theme.dark ? colors.secondary : colors.primary }]}>
+            <Text style={[styles.secondaryButtonText, { color: colors.softPlum }]}>
               Back to Home
             </Text>
           </Pressable>
         </View>
       </ScrollView>
 
-      {/* Info Modal */}
       <Modal
         visible={showPauseInfo}
         transparent={true}
@@ -212,28 +243,35 @@ export default function ResultsScreen() {
         onRequestClose={() => setShowPauseInfo(false)}
       >
         <View style={styles.modalOverlay}>
-          <View style={[styles.infoModal, { backgroundColor: theme.dark ? '#2a2a2a' : colors.card }]}>
-            <IconSymbol 
-              ios_icon_name="info.circle.fill" 
-              android_material_icon_name="info" 
-              size={64} 
-              color={theme.dark ? colors.secondary : colors.primary}
-            />
-            <Text style={[styles.infoTitle, { color: theme.dark ? '#ffffff' : colors.text }]}>
+          <View style={[styles.infoModal, glassStyles.glassCard]}>
+            <LinearGradient
+              colors={gradients.lavenderPink}
+              style={styles.infoIconContainer}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+            >
+              <IconSymbol 
+                ios_icon_name="info.circle.fill" 
+                android_material_icon_name="info" 
+                size={64} 
+                color={colors.cream}
+              />
+            </LinearGradient>
+            <Text style={[styles.infoTitle, { color: textColor }]}>
               Quiz Completed!
             </Text>
-            <Text style={[styles.infoText, { color: theme.dark ? '#cccccc' : colors.textSecondary }]}>
-              You&apos;ve finished the quiz. Review your results or start a new quiz to improve your score!
+            <Text style={[styles.infoText, { color: secondaryTextColor }]}>
+              You&apos;ve finished the quiz beautifully. Review your results or start a new quiz to improve your score!
             </Text>
             <Pressable 
               style={({ pressed }) => [
                 styles.infoButton,
-                { opacity: pressed ? 0.8 : 1 }
+                { opacity: pressed ? 0.85 : 1 }
               ]}
               onPress={() => setShowPauseInfo(false)}
             >
               <LinearGradient
-                colors={theme.dark ? ['#7b1fa2', '#9c27b0'] : [colors.primary, colors.secondary]}
+                colors={gradients.plumRose}
                 style={styles.infoButtonGradient}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 0 }}
@@ -252,13 +290,20 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  backgroundGradient: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+  },
   scrollView: {
     flex: 1,
   },
   contentContainer: {
-    paddingTop: 60,
+    paddingTop: 70,
     paddingHorizontal: 24,
-    paddingBottom: 120,
+    paddingBottom: 140,
     alignItems: 'center',
   },
   header: {
@@ -266,96 +311,97 @@ const styles = StyleSheet.create({
     marginBottom: 32,
   },
   emoji: {
-    fontSize: 80,
+    fontSize: 90,
     marginBottom: 16,
+    textShadowColor: 'rgba(154, 78, 136, 0.3)',
+    textShadowOffset: { width: 0, height: 4 },
+    textShadowRadius: 12,
   },
   title: {
-    fontSize: 32,
-    fontWeight: '800',
-    textAlign: 'center',
+    ...typography.heading1,
+    fontSize: 36,
+    marginBottom: 8,
+  },
+  subtitle: {
+    ...typography.body,
+    fontSize: 17,
+    fontStyle: 'italic',
   },
   scoreCard: {
     width: '100%',
-    borderRadius: 16,
-    padding: 32,
+    padding: 36,
     alignItems: 'center',
     marginBottom: 20,
-    boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.1)',
-    elevation: 3,
   },
   scoreCircle: {
-    width: 140,
-    height: 140,
-    borderRadius: 70,
+    width: 160,
+    height: 160,
+    borderRadius: 80,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 16,
-    boxShadow: '0px 4px 12px rgba(128, 0, 128, 0.3)',
-    elevation: 6,
+    marginBottom: 20,
+    borderWidth: 4,
+    borderColor: 'rgba(255, 255, 255, 0.6)',
+    ...shadows.glow,
   },
   scoreNumber: {
-    fontSize: 48,
+    fontSize: 56,
     fontWeight: '800',
-    color: '#FFFFFF',
+    color: colors.cream,
   },
   scoreTotal: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: '600',
-    color: '#FFFFFF',
+    color: colors.cream,
     opacity: 0.9,
   },
   percentage: {
-    fontSize: 24,
-    fontWeight: '700',
+    ...typography.heading2,
+    fontSize: 26,
   },
   rankCard: {
     width: '100%',
-    borderRadius: 16,
-    padding: 24,
+    padding: 28,
     alignItems: 'center',
     marginBottom: 20,
-    boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.1)',
-    elevation: 3,
+  },
+  rankBadgeContainer: {
+    marginBottom: 20,
   },
   rankBadge: {
-    marginBottom: 16,
-  },
-  badgeGradient: {
-    width: 64,
-    height: 64,
-    borderRadius: 32,
+    width: 80,
+    height: 80,
+    borderRadius: 40,
     justifyContent: 'center',
     alignItems: 'center',
-    boxShadow: '0px 4px 12px rgba(255, 215, 0, 0.4)',
-    elevation: 6,
+    borderWidth: 3,
+    borderColor: 'rgba(255, 255, 255, 0.6)',
   },
   rankTitle: {
+    ...typography.caption,
     fontSize: 16,
-    fontWeight: '600',
     marginBottom: 8,
   },
   rankName: {
-    fontSize: 28,
-    fontWeight: '800',
-    marginBottom: 12,
+    ...typography.heading1,
+    fontSize: 32,
+    marginBottom: 16,
   },
   rankMessage: {
+    ...typography.body,
     fontSize: 16,
     textAlign: 'center',
-    lineHeight: 24,
+    lineHeight: 26,
   },
   statsCard: {
     width: '100%',
-    borderRadius: 16,
-    padding: 24,
+    padding: 28,
     marginBottom: 32,
-    boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.1)',
-    elevation: 3,
   },
   statsTitle: {
-    fontSize: 18,
-    fontWeight: '700',
-    marginBottom: 20,
+    ...typography.heading3,
+    fontSize: 20,
+    marginBottom: 24,
     textAlign: 'center',
   },
   statRow: {
@@ -367,104 +413,119 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
   },
+  statIconContainer: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 12,
+    borderWidth: 2,
+    borderColor: 'rgba(255, 255, 255, 0.5)',
+    ...shadows.soft,
+  },
   statDivider: {
     width: 1,
-    height: 60,
-    backgroundColor: '#E0E0E0',
+    height: 80,
+    backgroundColor: 'rgba(200, 162, 200, 0.3)',
   },
   statLabel: {
+    ...typography.caption,
     fontSize: 14,
-    marginTop: 8,
-    marginBottom: 4,
+    marginBottom: 6,
   },
   statValue: {
-    fontSize: 24,
-    fontWeight: '700',
+    ...typography.heading2,
+    fontSize: 28,
   },
   buttonContainer: {
     width: '100%',
+    gap: 14,
   },
   button: {
     width: '100%',
-    borderRadius: 16,
+    borderRadius: 24,
     overflow: 'hidden',
-    marginBottom: 12,
-    boxShadow: '0px 4px 12px rgba(128, 0, 128, 0.3)',
-    elevation: 6,
+    ...shadows.glow,
   },
   buttonGradient: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 16,
+    paddingVertical: 18,
     paddingHorizontal: 32,
+    gap: 10,
   },
   buttonText: {
-    color: '#FFFFFF',
-    fontSize: 18,
+    color: colors.cream,
+    fontSize: 19,
     fontWeight: '700',
-    marginLeft: 8,
   },
   secondaryButton: {
     width: '100%',
-    borderRadius: 16,
+    borderRadius: 24,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 16,
+    paddingVertical: 18,
     paddingHorizontal: 32,
+    gap: 10,
   },
   secondaryButtonText: {
-    fontSize: 18,
+    fontSize: 19,
     fontWeight: '700',
-    marginLeft: 8,
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    backgroundColor: 'rgba(74, 44, 74, 0.85)',
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 24,
   },
   infoModal: {
-    borderRadius: 20,
-    padding: 32,
+    padding: 36,
     alignItems: 'center',
     width: '100%',
     maxWidth: 400,
-    boxShadow: '0px 4px 16px rgba(0, 0, 0, 0.3)',
-    elevation: 8,
+  },
+  infoIconContainer: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
+    borderWidth: 3,
+    borderColor: 'rgba(255, 255, 255, 0.5)',
   },
   infoTitle: {
-    fontSize: 28,
-    fontWeight: '800',
-    marginTop: 16,
+    ...typography.heading1,
+    fontSize: 32,
     marginBottom: 12,
     textAlign: 'center',
   },
   infoText: {
-    fontSize: 16,
+    ...typography.body,
     textAlign: 'center',
-    marginBottom: 24,
-    lineHeight: 24,
+    marginBottom: 28,
+    lineHeight: 26,
   },
   infoButton: {
     width: '100%',
-    borderRadius: 16,
+    borderRadius: 24,
     overflow: 'hidden',
-    boxShadow: '0px 4px 12px rgba(128, 0, 128, 0.3)',
-    elevation: 6,
+    ...shadows.glow,
   },
   infoButtonGradient: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 16,
+    paddingVertical: 18,
     paddingHorizontal: 32,
   },
   infoButtonText: {
-    color: '#FFFFFF',
-    fontSize: 18,
+    color: colors.cream,
+    fontSize: 19,
     fontWeight: '700',
   },
 });
