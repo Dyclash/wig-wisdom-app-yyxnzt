@@ -1,6 +1,6 @@
 
 import React, { useState } from "react";
-import { View, Text, StyleSheet, ScrollView, Pressable, Modal } from "react-native";
+import { View, Text, StyleSheet, ScrollView, Pressable, Modal, Linking } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { IconSymbol } from "@/components/IconSymbol.ios";
 import { useTheme } from "@react-navigation/native";
@@ -14,7 +14,6 @@ export default function ProfileScreen() {
   const router = useRouter();
   const [showPauseInfo, setShowPauseInfo] = useState(false);
 
-  // Mock data - in a real app, this would come from state management or backend
   const [userStats] = useState({
     name: "Wig Enthusiast",
     totalQuizzes: 12,
@@ -48,6 +47,40 @@ export default function ProfileScreen() {
   const handlePause = () => {
     console.log('Pause info shown on profile page');
     setShowPauseInfo(true);
+  };
+
+  const handleContactPress = (type: string, value: string) => {
+    console.log(`Contact pressed: ${type} - ${value}`);
+    let url = '';
+    
+    switch (type) {
+      case 'email':
+        url = `mailto:${value}`;
+        break;
+      case 'phone':
+        url = `tel:${value}`;
+        break;
+      case 'website':
+        url = value.startsWith('http') ? value : `https://${value}`;
+        break;
+      case 'instagram':
+        url = `https://instagram.com/${value.replace('@', '')}`;
+        break;
+      case 'twitter':
+        url = `https://twitter.com/${value.replace('@', '')}`;
+        break;
+      default:
+        console.log('Unknown contact type');
+        return;
+    }
+
+    Linking.canOpenURL(url).then((supported) => {
+      if (supported) {
+        Linking.openURL(url);
+      } else {
+        console.log(`Cannot open URL: ${url}`);
+      }
+    });
   };
 
   return (
@@ -253,6 +286,186 @@ export default function ProfileScreen() {
               </View>
             </View>
           ))}
+        </View>
+
+        {/* Contact Us Section */}
+        <View style={[styles.contactCard, { backgroundColor: theme.dark ? '#2a2a2a' : colors.card }]}>
+          <View style={styles.contactHeader}>
+            <LinearGradient
+              colors={theme.dark ? ['#7b1fa2', '#9c27b0'] : [colors.primary, colors.secondary]}
+              style={styles.contactIconContainer}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+            >
+              <IconSymbol 
+                ios_icon_name="envelope.fill" 
+                android_material_icon_name="mail" 
+                size={32} 
+                color="#FFFFFF"
+              />
+            </LinearGradient>
+            <Text style={[styles.sectionTitle, { color: theme.dark ? '#ffffff' : colors.text, marginBottom: 8 }]}>
+              Contact Us
+            </Text>
+            <Text style={[styles.contactSubtitle, { color: theme.dark ? '#cccccc' : colors.textSecondary }]}>
+              Have questions? We&apos;re here to help!
+            </Text>
+          </View>
+
+          <View style={styles.contactList}>
+            <Pressable 
+              style={({ pressed }) => [
+                styles.contactItem,
+                { 
+                  backgroundColor: theme.dark ? '#3a3a3a' : colors.highlight,
+                  opacity: pressed ? 0.7 : 1 
+                }
+              ]}
+              onPress={() => handleContactPress('email', 'support@wigwisdom.com')}
+            >
+              <View style={[styles.contactIconWrapper, { backgroundColor: theme.dark ? '#4a4a4a' : 'rgba(200, 162, 200, 0.3)' }]}>
+                <IconSymbol 
+                  ios_icon_name="envelope.fill" 
+                  android_material_icon_name="mail" 
+                  size={22} 
+                  color={theme.dark ? colors.secondary : colors.primary}
+                />
+              </View>
+              <View style={styles.contactTextContainer}>
+                <Text style={[styles.contactLabel, { color: theme.dark ? '#cccccc' : colors.textSecondary }]}>
+                  Email
+                </Text>
+                <Text style={[styles.contactValue, { color: theme.dark ? '#ffffff' : colors.text }]}>
+                  support@wigwisdom.com
+                </Text>
+              </View>
+              <IconSymbol 
+                ios_icon_name="chevron.right" 
+                android_material_icon_name="chevron-right" 
+                size={20} 
+                color={theme.dark ? '#999999' : colors.textSecondary}
+              />
+            </Pressable>
+
+            <Pressable 
+              style={({ pressed }) => [
+                styles.contactItem,
+                { 
+                  backgroundColor: theme.dark ? '#3a3a3a' : colors.highlight,
+                  opacity: pressed ? 0.7 : 1 
+                }
+              ]}
+              onPress={() => handleContactPress('phone', '+1-555-WIG-HELP')}
+            >
+              <View style={[styles.contactIconWrapper, { backgroundColor: theme.dark ? '#4a4a4a' : 'rgba(200, 162, 200, 0.3)' }]}>
+                <IconSymbol 
+                  ios_icon_name="phone.fill" 
+                  android_material_icon_name="phone" 
+                  size={22} 
+                  color={theme.dark ? colors.secondary : colors.primary}
+                />
+              </View>
+              <View style={styles.contactTextContainer}>
+                <Text style={[styles.contactLabel, { color: theme.dark ? '#cccccc' : colors.textSecondary }]}>
+                  Phone
+                </Text>
+                <Text style={[styles.contactValue, { color: theme.dark ? '#ffffff' : colors.text }]}>
+                  +1-555-WIG-HELP
+                </Text>
+              </View>
+              <IconSymbol 
+                ios_icon_name="chevron.right" 
+                android_material_icon_name="chevron-right" 
+                size={20} 
+                color={theme.dark ? '#999999' : colors.textSecondary}
+              />
+            </Pressable>
+
+            <Pressable 
+              style={({ pressed }) => [
+                styles.contactItem,
+                { 
+                  backgroundColor: theme.dark ? '#3a3a3a' : colors.highlight,
+                  opacity: pressed ? 0.7 : 1 
+                }
+              ]}
+              onPress={() => handleContactPress('website', 'www.wigwisdom.com')}
+            >
+              <View style={[styles.contactIconWrapper, { backgroundColor: theme.dark ? '#4a4a4a' : 'rgba(200, 162, 200, 0.3)' }]}>
+                <IconSymbol 
+                  ios_icon_name="globe" 
+                  android_material_icon_name="language" 
+                  size={22} 
+                  color={theme.dark ? colors.secondary : colors.primary}
+                />
+              </View>
+              <View style={styles.contactTextContainer}>
+                <Text style={[styles.contactLabel, { color: theme.dark ? '#cccccc' : colors.textSecondary }]}>
+                  Website
+                </Text>
+                <Text style={[styles.contactValue, { color: theme.dark ? '#ffffff' : colors.text }]}>
+                  www.wigwisdom.com
+                </Text>
+              </View>
+              <IconSymbol 
+                ios_icon_name="chevron.right" 
+                android_material_icon_name="chevron-right" 
+                size={20} 
+                color={theme.dark ? '#999999' : colors.textSecondary}
+              />
+            </Pressable>
+          </View>
+
+          <View style={[styles.socialSection, { borderTopColor: theme.dark ? '#3a3a3a' : colors.highlight }]}>
+            <Text style={[styles.socialTitle, { color: theme.dark ? '#cccccc' : colors.textSecondary }]}>
+              Follow Us
+            </Text>
+            <View style={styles.socialButtons}>
+              <Pressable 
+                style={({ pressed }) => [
+                  styles.socialButton,
+                  { opacity: pressed ? 0.7 : 1 }
+                ]}
+                onPress={() => handleContactPress('instagram', '@wigwisdom')}
+              >
+                <LinearGradient
+                  colors={['#833AB4', '#FD1D1D', '#FCAF45']}
+                  style={styles.socialButtonGradient}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 1 }}
+                >
+                  <IconSymbol 
+                    ios_icon_name="camera.fill" 
+                    android_material_icon_name="photo-camera" 
+                    size={24} 
+                    color="#FFFFFF"
+                  />
+                </LinearGradient>
+              </Pressable>
+
+              <Pressable 
+                style={({ pressed }) => [
+                  styles.socialButton,
+                  { opacity: pressed ? 0.7 : 1 }
+                ]}
+                onPress={() => handleContactPress('twitter', '@wigwisdom')}
+              >
+                <LinearGradient
+                  colors={['#1DA1F2', '#0E71C8']}
+                  style={styles.socialButtonGradient}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 1 }}
+                >
+                  <IconSymbol 
+                    ios_icon_name="bird.fill" 
+                    android_material_icon_name="flutter-dash" 
+                    size={24} 
+                    color="#FFFFFF"
+                  />
+                </LinearGradient>
+              </Pressable>
+            </View>
+          </View>
         </View>
 
         {/* Take Quiz Button */}
@@ -509,6 +722,86 @@ const styles = StyleSheet.create({
   },
   recentPercentage: {
     fontSize: 12,
+  },
+  contactCard: {
+    borderRadius: 16,
+    padding: 20,
+    marginBottom: 16,
+    boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.1)',
+    elevation: 3,
+  },
+  contactHeader: {
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  contactIconContainer: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 12,
+    boxShadow: '0px 2px 6px rgba(0, 0, 0, 0.15)',
+    elevation: 4,
+  },
+  contactSubtitle: {
+    fontSize: 14,
+    textAlign: 'center',
+  },
+  contactList: {
+    gap: 10,
+    marginBottom: 20,
+  },
+  contactItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 14,
+    borderRadius: 12,
+    gap: 12,
+  },
+  contactIconWrapper: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  contactTextContainer: {
+    flex: 1,
+  },
+  contactLabel: {
+    fontSize: 11,
+    marginBottom: 3,
+  },
+  contactValue: {
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  socialSection: {
+    alignItems: 'center',
+    paddingTop: 16,
+    borderTopWidth: 1,
+  },
+  socialTitle: {
+    fontSize: 14,
+    fontWeight: '600',
+    marginBottom: 12,
+  },
+  socialButtons: {
+    flexDirection: 'row',
+    gap: 14,
+  },
+  socialButton: {
+    borderRadius: 20,
+    overflow: 'hidden',
+    boxShadow: '0px 2px 6px rgba(0, 0, 0, 0.15)',
+    elevation: 4,
+  },
+  socialButtonGradient: {
+    width: 50,
+    height: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   quizButton: {
     width: '100%',
