@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, Pressable, Animated } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
@@ -7,6 +7,11 @@ import { colors } from '@/styles/commonStyles';
 import { IconSymbol } from '@/components/IconSymbol';
 import { quizQuestions } from '@/data/quizQuestions';
 import { LinearGradient } from 'expo-linear-gradient';
+
+interface ShuffledQuestion {
+  options: string[];
+  correctAnswerIndex: number;
+}
 
 export default function QuizScreen() {
   const theme = useTheme();
@@ -16,18 +21,52 @@ export default function QuizScreen() {
   const [score, setScore] = useState(0);
   const [showFeedback, setShowFeedback] = useState(false);
   const [fadeAnim] = useState(new Animated.Value(1));
+  const [shuffledQuestion, setShuffledQuestion] = useState<ShuffledQuestion | null>(null);
 
   const currentQuestion = quizQuestions[currentQuestionIndex];
   const progress = ((currentQuestionIndex + 1) / quizQuestions.length) * 100;
 
+  // Shuffle answers when question changes
+  useEffect(() => {
+    console.log(`Loading question ${currentQuestionIndex + 1}`);
+    const shuffled = shuffleAnswers(currentQuestion.options, currentQuestion.correctAnswer);
+    setShuffledQuestion(shuffled);
+  }, [currentQuestionIndex]);
+
+  const shuffleAnswers = (options: string[], correctAnswerIndex: number): ShuffledQuestion => {
+    // Create array of indices
+    const indices = options.map((_, index) => index);
+    
+    // Fisher-Yates shuffle algorithm
+    for (let i = indices.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [indices[i], indices[j]] = [indices[j], indices[i]];
+    }
+    
+    // Map shuffled indices to options
+    const shuffledOptions = indices.map(index => options[index]);
+    
+    // Find new position of correct answer
+    const newCorrectIndex = indices.indexOf(correctAnswerIndex);
+    
+    console.log(`Shuffled answers for question ${currentQuestionIndex + 1}. Correct answer now at index ${newCorrectIndex}`);
+    
+    return {
+      options: shuffledOptions,
+      correctAnswerIndex: newCorrectIndex
+    };
+  };
+
   const handleAnswerSelect = (answerIndex: number) => {
-    if (showFeedback) return;
+    if (showFeedback || !shuffledQuestion) return;
 
     console.log(`Answer selected: ${answerIndex}`);
     setSelectedAnswer(answerIndex);
     setShowFeedback(true);
 
-    if (answerIndex === currentQuestion.correctAnswer) {
+    const isCorrect = answerIndex === shuffledQuestion.correctAnswerIndex;
+    
+    if (isCorrect) {
       setScore(score + 1);
       console.log(`Correct! Score: ${score + 1}`);
     } else {
@@ -51,11 +90,11 @@ export default function QuizScreen() {
           }).start();
         });
       } else {
-        console.log(`Quiz complete! Final score: ${score + (answerIndex === currentQuestion.correctAnswer ? 1 : 0)}`);
+        console.log(`Quiz complete! Final score: ${score + (isCorrect ? 1 : 0)}`);
         router.push({
           pathname: '/results',
           params: { 
-            score: score + (answerIndex === currentQuestion.correctAnswer ? 1 : 0),
+            score: score + (isCorrect ? 1 : 0),
             total: quizQuestions.length 
           }
         });
@@ -64,20 +103,33 @@ export default function QuizScreen() {
   };
 
   const getAnswerStyle = (index: number) => {
-    if (!showFeedback) {
+    if (!showFeedback || !shuffledQuestion) {
       return styles.optionButton;
     }
 
-    if (index === currentQuestion.correctAnswer) {
+    if (index === shuffledQuestion.correctAnswerIndex) {
       return [styles.optionButton, styles.correctAnswer];
     }
 
-    if (index === selectedAnswer && index !== currentQuestion.correctAnswer) {
+    if (index === selectedAnswer && index !== shuffledQuestion.correctAnswerIndex) {
       return [styles.optionButton, styles.wrongAnswer];
     }
 
     return [styles.optionButton, styles.disabledAnswer];
   };
+
+  // Don't render until shuffled question is ready
+  if (!shuffledQuestion) {
+    return (
+      <View style={[styles.container, { backgroundColor: theme.dark ? '#1a1a1a' : colors.background }]}>
+        <View style={styles.loadingContainer}>
+          <Text style={[styles.loadingText, { color: theme.dark ? '#ffffff' : colors.text }]}>
+            Loading...
+          </Text>
+        </View>
+      </View>
+    );
+  }
 
   return (
     <View style={[styles.container, { backgroundColor: theme.dark ? '#1a1a1a' : colors.background }]}>
@@ -118,7 +170,7 @@ export default function QuizScreen() {
           </View>
 
           <View style={styles.optionsContainer}>
-            {currentQuestion.options.map((option, index) => (
+            {shuffledQuestion.options.map((option, index) => (
               <Pressable
                 key={index}
                 style={({ pressed }) => [
@@ -137,7 +189,7 @@ export default function QuizScreen() {
                     { 
                       borderColor: theme.dark ? '#555555' : colors.highlight,
                       backgroundColor: selectedAnswer === index && showFeedback
-                        ? (index === currentQuestion.correctAnswer 
+                        ? (index === shuffledQuestion.correctAnswerIndex 
                             ? '#4CAF50' 
                             : '#F44336')
                         : 'transparent'
@@ -145,8 +197,8 @@ export default function QuizScreen() {
                   ]}>
                     {selectedAnswer === index && showFeedback && (
                       <IconSymbol 
-                        ios_icon_name={index === currentQuestion.correctAnswer ? "checkmark" : "xmark"}
-                        android_material_icon_name={index === currentQuestion.correctAnswer ? "check" : "close"}
+                        ios_icon_name={index === shuffledQuestion.correctAnswerIndex ? "checkmark" : "xmark"}
+                        android_material_icon_name={index === shuffledQuestion.correctAnswerIndex ? "check" : "close"}
                         size={16} 
                         color="#FFFFFF"
                       />
@@ -167,27 +219,27 @@ export default function QuizScreen() {
             <View style={[
               styles.feedbackCard,
               { 
-                backgroundColor: selectedAnswer === currentQuestion.correctAnswer
+                backgroundColor: selectedAnswer === shuffledQuestion.correctAnswerIndex
                   ? (theme.dark ? '#1b5e20' : '#E8F5E9')
                   : (theme.dark ? '#b71c1c' : '#FFEBEE')
               }
             ]}>
               <View style={styles.feedbackHeader}>
                 <IconSymbol 
-                  ios_icon_name={selectedAnswer === currentQuestion.correctAnswer ? "checkmark.circle.fill" : "xmark.circle.fill"}
-                  android_material_icon_name={selectedAnswer === currentQuestion.correctAnswer ? "check-circle" : "cancel"}
+                  ios_icon_name={selectedAnswer === shuffledQuestion.correctAnswerIndex ? "checkmark.circle.fill" : "xmark.circle.fill"}
+                  android_material_icon_name={selectedAnswer === shuffledQuestion.correctAnswerIndex ? "check-circle" : "cancel"}
                   size={24} 
-                  color={selectedAnswer === currentQuestion.correctAnswer ? '#4CAF50' : '#F44336'}
+                  color={selectedAnswer === shuffledQuestion.correctAnswerIndex ? '#4CAF50' : '#F44336'}
                 />
                 <Text style={[
                   styles.feedbackTitle,
                   { 
-                    color: selectedAnswer === currentQuestion.correctAnswer
+                    color: selectedAnswer === shuffledQuestion.correctAnswerIndex
                       ? '#4CAF50'
                       : '#F44336'
                   }
                 ]}>
-                  {selectedAnswer === currentQuestion.correctAnswer ? 'Correct!' : 'Not quite!'}
+                  {selectedAnswer === shuffledQuestion.correctAnswerIndex ? 'Correct!' : 'Not quite!'}
                 </Text>
               </View>
               <Text style={[
@@ -207,6 +259,15 @@ export default function QuizScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingText: {
+    fontSize: 18,
+    fontWeight: '600',
   },
   header: {
     paddingTop: 60,
