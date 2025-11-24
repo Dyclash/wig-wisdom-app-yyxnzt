@@ -437,5 +437,152 @@ export const quizQuestions: Question[] = [
     ],
     correctAnswer: 0,
     explanation: 'Vacuum seal bags compress the wig securely, preventing movement and tangling during shipping while protecting it from moisture.'
+  },
+  // 🎯 Installation Methods Section
+  {
+    id: 37,
+    question: 'Which method installs a wig without glue?',
+    options: [
+      'Glue install',
+      'Gel melt',
+      'Elastic band / glueless',
+      'Hot comb melt'
+    ],
+    correctAnswer: 2,
+    explanation: 'Elastic band or glueless methods use built-in bands, combs, and adjustable straps to secure the wig without any adhesive.'
+  },
+  {
+    id: 38,
+    question: 'What is used to tint lace to match skin tone?',
+    options: [
+      'Foundation',
+      'Lace tint spray',
+      'Concealer',
+      'All of the above'
+    ],
+    correctAnswer: 3,
+    explanation: 'Foundation, lace tint spray, and concealer can all be used to customize the lace color to match your skin tone perfectly.'
+  },
+  {
+    id: 39,
+    question: 'Which product protects your edges during glue installs?',
+    options: [
+      'Wax stick',
+      'Scarf',
+      'Skin protectant',
+      'Mousse'
+    ],
+    correctAnswer: 2,
+    explanation: 'Skin protectant creates a barrier between your skin and the adhesive, protecting your edges from damage and irritation.'
+  },
+  {
+    id: 40,
+    question: 'What is the purpose of the hot comb?',
+    options: [
+      'Cut lace',
+      'Melt the hairline & flatten roots',
+      'Remove glue',
+      'Add volume'
+    ],
+    correctAnswer: 1,
+    explanation: 'A hot comb is used to melt down the hairline for a seamless blend and flatten the roots for a more natural appearance.'
+  },
+  // 💧 Wig Care Section
+  {
+    id: 41,
+    question: 'How often should a human-hair wig be washed?',
+    options: [
+      'After every wear',
+      'Weekly',
+      'Every 7–10 wears',
+      'Once a year'
+    ],
+    correctAnswer: 2,
+    explanation: 'Washing every 7-10 wears maintains cleanliness without stripping natural oils or causing unnecessary wear on the hair fibers.'
+  },
+  {
+    id: 42,
+    question: 'What should you use to detangle curly wigs?',
+    options: [
+      'Fine comb',
+      'Finger combing',
+      'Rake brush',
+      'Wire brush'
+    ],
+    correctAnswer: 1,
+    explanation: 'Finger combing is the gentlest method for curly wigs, preserving the curl pattern while preventing breakage and frizz.'
+  },
+  {
+    id: 43,
+    question: 'What dries out a wig the fastest?',
+    options: [
+      'Heat styling',
+      'Wig stand',
+      'Conditioner',
+      'Satin bags'
+    ],
+    correctAnswer: 0,
+    explanation: 'Excessive heat styling strips moisture from the hair fibers, leading to dryness, brittleness, and reduced wig lifespan.'
+  },
+  {
+    id: 44,
+    question: 'Which product restores moisture to human hair wigs?',
+    options: [
+      'Alcohol spray',
+      'Fabric softener',
+      'Leave-in conditioner',
+      'Dry shampoo'
+    ],
+    correctAnswer: 2,
+    explanation: 'Leave-in conditioner provides continuous moisture, softness, and protection to keep human hair wigs looking healthy and vibrant.'
+  },
+  // 🔥 Wig Maintenance Section
+  {
+    id: 45,
+    question: 'What\'s the best way to store wigs?',
+    options: [
+      'Plastic bag only',
+      'On the floor',
+      'Wig head or satin bag',
+      'In sunlight'
+    ],
+    correctAnswer: 2,
+    explanation: 'Storing on a wig head maintains the shape, while satin bags protect from dust and friction - both methods preserve wig quality.'
+  },
+  {
+    id: 46,
+    question: 'What shortens wig lifespan the most?',
+    options: [
+      'Satin pillowcase',
+      'Constant heat styling',
+      'Light brushing',
+      'Washing regularly'
+    ],
+    correctAnswer: 1,
+    explanation: 'Constant heat styling causes cumulative damage to hair fibers, leading to dryness, breakage, and significantly reduced lifespan.'
+  },
+  {
+    id: 47,
+    question: 'Which wig type frizzes quickest in humidity?',
+    options: [
+      'Straight',
+      'Loose wave',
+      'Deep curl',
+      'Body wave'
+    ],
+    correctAnswer: 2,
+    explanation: 'Deep curl textures have more surface area exposed to humidity, making them most susceptible to frizz and loss of curl definition.'
+  },
+  {
+    id: 48,
+    question: 'Why do lace front wigs shed over time?',
+    options: [
+      'Over-plucking',
+      'Cold weather',
+      'Too much conditioner',
+      'Wearing a bonnet'
+    ],
+    correctAnswer: 0,
+    explanation: 'Over-plucking weakens the knots where hair is attached to the lace, causing excessive shedding and thinning over time.'
   }
 ];
