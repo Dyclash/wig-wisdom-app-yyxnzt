@@ -1,13 +1,13 @@
 
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, ViewStyle } from 'react-native';
 import Svg, { Path, Defs, LinearGradient as SvgLinearGradient, Stop, Circle } from 'react-native-svg';
 import { LinearGradient } from 'expo-linear-gradient';
 import { colors, shadows } from '@/styles/commonStyles';
 
 interface LaceFrontalEmblemProps {
   size?: number;
-  style?: any;
+  style?: ViewStyle;
 }
 
 export function LaceFrontalEmblem({ size = 200, style }: LaceFrontalEmblemProps) {
@@ -17,7 +17,7 @@ export function LaceFrontalEmblem({ size = 200, style }: LaceFrontalEmblemProps)
     <View style={[styles.container, { width: size, height: size }, style]}>
       {/* Gradient Background with Glassmorphism */}
       <LinearGradient
-        colors={['#C8A2C8', '#E5B8D0', '#F7C6D0']} // Lavender to Pink gradient
+        colors={['#C8A2C8', '#E5B8D0', '#F7C6D0']}
         style={[styles.gradientBackground, { width: size, height: size, borderRadius: size / 2 }]}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
@@ -33,7 +33,6 @@ export function LaceFrontalEmblem({ size = 200, style }: LaceFrontalEmblemProps)
       <View style={styles.iconContainer}>
         <Svg width={iconSize} height={iconSize} viewBox="0 0 200 200">
           <Defs>
-            {/* Rose Gold Gradient for the icon */}
             <SvgLinearGradient id="roseGold" x1="0%" y1="0%" x2="100%" y2="100%">
               <Stop offset="0%" stopColor="#D4A5A5" stopOpacity="1" />
               <Stop offset="50%" stopColor="#B76E79" stopOpacity="1" />
@@ -41,9 +40,6 @@ export function LaceFrontalEmblem({ size = 200, style }: LaceFrontalEmblemProps)
             </SvgLinearGradient>
           </Defs>
           
-          {/* Lace Frontal Wig Outline - Overhead View */}
-          
-          {/* Main hairline curve (top of head) */}
           <Path
             d="M 40 80 Q 40 40, 100 30 Q 160 40, 160 80"
             stroke="url(#roseGold)"
@@ -53,7 +49,6 @@ export function LaceFrontalEmblem({ size = 200, style }: LaceFrontalEmblemProps)
             strokeLinejoin="round"
           />
           
-          {/* Left side hairline */}
           <Path
             d="M 40 80 Q 35 100, 35 120 Q 35 140, 40 160"
             stroke="url(#roseGold)"
@@ -63,7 +58,6 @@ export function LaceFrontalEmblem({ size = 200, style }: LaceFrontalEmblemProps)
             strokeLinejoin="round"
           />
           
-          {/* Right side hairline */}
           <Path
             d="M 160 80 Q 165 100, 165 120 Q 165 140, 160 160"
             stroke="url(#roseGold)"
@@ -73,7 +67,6 @@ export function LaceFrontalEmblem({ size = 200, style }: LaceFrontalEmblemProps)
             strokeLinejoin="round"
           />
           
-          {/* Back/nape curve */}
           <Path
             d="M 40 160 Q 60 175, 100 180 Q 140 175, 160 160"
             stroke="url(#roseGold)"
@@ -83,9 +76,6 @@ export function LaceFrontalEmblem({ size = 200, style }: LaceFrontalEmblemProps)
             strokeLinejoin="round"
           />
           
-          {/* Lace pattern details - delicate lines */}
-          
-          {/* Center part line */}
           <Path
             d="M 100 30 L 100 90"
             stroke="url(#roseGold)"
@@ -95,7 +85,6 @@ export function LaceFrontalEmblem({ size = 200, style }: LaceFrontalEmblemProps)
             opacity="0.7"
           />
           
-          {/* Left lace detail curves */}
           <Path
             d="M 60 50 Q 70 60, 80 70"
             stroke="url(#roseGold)"
@@ -123,7 +112,6 @@ export function LaceFrontalEmblem({ size = 200, style }: LaceFrontalEmblemProps)
             opacity="0.6"
           />
           
-          {/* Right lace detail curves */}
           <Path
             d="M 140 50 Q 130 60, 120 70"
             stroke="url(#roseGold)"
@@ -151,7 +139,6 @@ export function LaceFrontalEmblem({ size = 200, style }: LaceFrontalEmblemProps)
             opacity="0.6"
           />
           
-          {/* Hair flow lines - wavy texture */}
           <Path
             d="M 70 60 Q 75 75, 70 90"
             stroke="url(#roseGold)"
@@ -188,7 +175,6 @@ export function LaceFrontalEmblem({ size = 200, style }: LaceFrontalEmblemProps)
             opacity="0.5"
           />
           
-          {/* Bottom hair flow */}
           <Path
             d="M 60 140 Q 65 155, 60 170"
             stroke="url(#roseGold)"
@@ -225,7 +211,6 @@ export function LaceFrontalEmblem({ size = 200, style }: LaceFrontalEmblemProps)
             opacity="0.5"
           />
           
-          {/* Decorative dots for lace texture */}
           <Circle cx="55" cy="60" r="1.5" fill="url(#roseGold)" opacity="0.7" />
           <Circle cx="65" cy="75" r="1.5" fill="url(#roseGold)" opacity="0.7" />
           <Circle cx="75" cy="95" r="1.5" fill="url(#roseGold)" opacity="0.7" />
@@ -233,14 +218,12 @@ export function LaceFrontalEmblem({ size = 200, style }: LaceFrontalEmblemProps)
           <Circle cx="135" cy="75" r="1.5" fill="url(#roseGold)" opacity="0.7" />
           <Circle cx="125" cy="95" r="1.5" fill="url(#roseGold)" opacity="0.7" />
           
-          {/* Center decorative elements */}
           <Circle cx="100" cy="100" r="2" fill="url(#roseGold)" opacity="0.6" />
           <Circle cx="90" cy="110" r="1.5" fill="url(#roseGold)" opacity="0.6" />
           <Circle cx="110" cy="110" r="1.5" fill="url(#roseGold)" opacity="0.6" />
         </Svg>
       </View>
       
-      {/* Glossy Reflection */}
       <View style={[styles.glossyReflection, { width: size * 0.4, height: size * 0.3, borderRadius: size / 4 }]} />
     </View>
   );

@@ -23,7 +23,6 @@ export default function HomeScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: bgColor }]}>
-      {/* Decorative Background Gradient */}
       <LinearGradient
         colors={theme.dark 
           ? ['rgba(42, 26, 46, 0.9)', 'rgba(154, 78, 136, 0.2)', 'rgba(42, 26, 46, 0.9)']
@@ -38,9 +37,10 @@ export default function HomeScreen() {
         contentContainerStyle={styles.contentContainer}
         showsVerticalScrollIndicator={false}
       >
-        {/* Header with Lace Frontal Emblem */}
         <View style={styles.header}>
-          <LaceFrontalEmblem size={140} style={styles.emblem} />
+          <View style={styles.emblem}>
+            <LaceFrontalEmblem size={140} />
+          </View>
           
           <Text style={[styles.title, { color: textColor }]}>
             Wig Wisdom
@@ -51,7 +51,6 @@ export default function HomeScreen() {
           </Text>
         </View>
 
-        {/* Glass Info Card */}
         <View style={[styles.glassCard, glassStyles.glassPinkCard]}>
           <View style={styles.infoRow}>
             <View style={styles.iconCircle}>
@@ -96,7 +95,6 @@ export default function HomeScreen() {
           </View>
         </View>
 
-        {/* Topics Card with Wave Pattern */}
         <View style={[styles.topicsCard, glassStyles.glassLavenderCard]}>
           <Text style={[styles.sectionTitle, { color: textColor }]}>
             Topics Covered
@@ -123,7 +121,6 @@ export default function HomeScreen() {
           </View>
         </View>
 
-        {/* Ranking System with Glass Effect */}
         <View style={[styles.rankCard, glassStyles.glassCard]}>
           <Text style={[styles.sectionTitle, { color: textColor }]}>
             Ranking System
@@ -176,7 +173,6 @@ export default function HomeScreen() {
           </View>
         </View>
 
-        {/* Start Button with Gradient */}
         <Pressable 
           style={({ pressed }) => [
             styles.startButton,
@@ -190,13 +186,15 @@ export default function HomeScreen() {
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 0 }}
           >
-            <Text style={styles.buttonText}>Begin Your Journey</Text>
-            <IconSymbol 
-              ios_icon_name="arrow.right" 
-              android_material_icon_name="arrow-forward" 
-              size={24} 
-              color={colors.cream}
-            />
+            <View style={styles.buttonContent}>
+              <Text style={styles.buttonText}>Begin Your Journey</Text>
+              <IconSymbol 
+                ios_icon_name="arrow.right" 
+                android_material_icon_name="arrow-forward" 
+                size={24} 
+                color={colors.cream}
+              />
+            </View>
           </LinearGradient>
         </Pressable>
       </ScrollView>
@@ -353,11 +351,13 @@ const styles = StyleSheet.create({
     ...shadows.glow,
   },
   buttonGradient: {
+    paddingVertical: 20,
+    paddingHorizontal: 32,
+  },
+  buttonContent: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 20,
-    paddingHorizontal: 32,
     gap: 12,
   },
   buttonText: {
