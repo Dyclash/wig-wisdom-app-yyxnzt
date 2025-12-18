@@ -21,6 +21,16 @@ export default function HomeScreen() {
   const textColor = theme.dark ? colors.textLight : colors.text;
   const secondaryTextColor = theme.dark ? '#D4B5D4' : colors.textSecondary;
 
+  const topics = [
+    { id: 'topic-1', emoji: '💎', text: 'Wig Quality & Selection' },
+    { id: 'topic-2', emoji: '📏', text: 'Length & Density' },
+    { id: 'topic-3', emoji: '💡', text: 'Beginner Knowledge' },
+    { id: 'topic-4', emoji: '🛍️', text: 'Shopping & Buying' },
+    { id: 'topic-5', emoji: '🎯', text: 'Installation Methods' },
+    { id: 'topic-6', emoji: '💧', text: 'Wig Care' },
+    { id: 'topic-7', emoji: '🔥', text: 'Wig Maintenance' },
+  ];
+
   return (
     <View style={[styles.container, { backgroundColor: bgColor }]}>
       <LinearGradient
@@ -100,16 +110,8 @@ export default function HomeScreen() {
             Topics Covered
           </Text>
           <View style={styles.topicsList}>
-            {[
-              { emoji: '💎', text: 'Wig Quality & Selection' },
-              { emoji: '📏', text: 'Length & Density' },
-              { emoji: '💡', text: 'Beginner Knowledge' },
-              { emoji: '🛍️', text: 'Shopping & Buying' },
-              { emoji: '🎯', text: 'Installation Methods' },
-              { emoji: '💧', text: 'Wig Care' },
-              { emoji: '🔥', text: 'Wig Maintenance' },
-            ].map((topic, index) => (
-              <View key={index} style={styles.topicItem}>
+            {topics.map((topic) => (
+              <View key={topic.id} style={styles.topicItem}>
                 <View style={styles.topicEmojiContainer}>
                   <Text style={styles.topicEmoji}>{topic.emoji}</Text>
                 </View>
